@@ -208,6 +208,24 @@
   .chat-send:disabled{opacity:0.5;cursor:not-allowed;}
   .explore-other{text-align:center;padding:24px;border-top:1px solid var(--light-gray);margin-top:16px;}
 
+  /* SECTION JUMPER */
+  .section-jumper{position:sticky;top:57px;z-index:90;background:var(--cream);padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--light-gray);}
+  .section-jumper-inner{display:flex;gap:6px;overflow-x:auto;padding:0 2px;scrollbar-width:none;}
+  .section-jumper-inner::-webkit-scrollbar{display:none;}
+  .jump-pill{flex-shrink:0;padding:6px 14px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--card-bg);font-size:0.78rem;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;white-space:nowrap;}
+  .jump-pill:hover{border-color:var(--terracotta);color:var(--terracotta);}
+  .jump-pill.active{background:var(--terracotta);border-color:var(--terracotta);color:white;}
+
+  /* COLLAPSIBLE SECTIONS */
+  .deep-section{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;border:1px solid var(--light-gray);overflow:hidden;}
+  .deep-section-header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;cursor:pointer;user-select:none;transition:var(--transition);}
+  .deep-section-header:hover{background:var(--terracotta-pale);}
+  .deep-section-label{font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);}
+  .deep-section-chevron{font-size:0.7rem;color:var(--warm-gray);transition:transform 0.3s ease;flex-shrink:0;}
+  .deep-section-chevron.open{transform:rotate(180deg);}
+  .deep-section-body{padding:0 28px 24px;animation:fadeUp 0.2s ease;}
+  .deep-section-body.collapsed{display:none;}
+
   .clear-data-link{color:var(--warm-gray);font-size:0.78rem;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif;transition:var(--transition);}
   .clear-data-link:hover{color:var(--terracotta);}
   .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:12px 24px;border-radius:50px;font-size:0.88rem;font-weight:500;z-index:1000;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;}
@@ -395,6 +413,19 @@
   <!-- DEEP DIVE -->
   <div id="screen-deep" class="hidden">
     <button class="back-btn" onclick="showScreen('paths')">← Back to all paths</button>
+
+    <!-- STICKY SECTION JUMPER -->
+    <div class="section-jumper" id="sectionJumper">
+      <div class="section-jumper-inner">
+        <button class="jump-pill active" onclick="jumpTo('sec-roadmap')" id="jp-roadmap">Roadmap</button>
+        <button class="jump-pill" onclick="jumpTo('sec-gaps')" id="jp-gaps">Gaps</button>
+        <button class="jump-pill" onclick="jumpTo('sec-wins')" id="jp-wins">This Week</button>
+        <button class="jump-pill" onclick="jumpTo('sec-day')" id="jp-day">Day in Life</button>
+        <button class="jump-pill" onclick="jumpTo('sec-risks')" id="jp-risks">Risks</button>
+        <button class="jump-pill" onclick="jumpTo('sec-ai')" id="jp-ai">AI-Proof</button>
+      </div>
+    </div>
+
     <div id="deep-content"></div>
     <div class="export-bar">
       <span class="export-label">Save your report</span>
@@ -732,23 +763,130 @@ function renderDeepDive(){
       <p style="color:var(--warm-gray);font-size:0.95rem;margin-top:8px">${p.tagline}</p>
     </div>
     <div class="card"><div class="path-eli5" style="margin-bottom:0"><strong>The short version</strong>${p.eli5}</div></div>
-    <div class="card"><div class="section-title">Your roadmap</div><div class="roadmap-steps">${roadHTML}</div></div>
-    <div class="card">
-      <div class="section-title">Skill gaps to close</div><div class="skill-gaps">${gapsHTML}</div>
-      <div class="section-title">Learning resources</div><div class="skill-gaps">${resHTML}</div>
+
+    <div class="deep-section" id="sec-roadmap">
+      <div class="deep-section-header" onclick="toggleSection('sec-roadmap')">
+        <span class="deep-section-label">Your roadmap</span>
+        <span class="deep-section-chevron open" id="chev-sec-roadmap">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-roadmap">
+        <div class="roadmap-steps">${roadHTML}</div>
+      </div>
     </div>
-    <div class="card"><div class="section-title">Start this week</div><div class="roadmap-steps">${winsHTML}</div></div>
-    <div class="card"><div class="section-title">A day in the life</div><p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal);font-style:italic">"${d.dayInTheLife}"</p></div>
-    <div class="card"><div class="section-title">Honest risks</div><p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal)">${d.risks}</p></div>
-    <div class="card">
-      <div class="section-title">🛡 AI-proofing this path</div>
-      <div class="ai-proof-box"><p>${d.aiProofingAdvice}</p></div>
-      <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
+
+    <div class="deep-section" id="sec-gaps">
+      <div class="deep-section-header" onclick="toggleSection('sec-gaps')">
+        <span class="deep-section-label">Skill gaps &amp; resources</span>
+        <span class="deep-section-chevron open" id="chev-sec-gaps">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-gaps">
+        <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:12px;">Gaps to close</p>
+        <div class="skill-gaps" style="margin-bottom:20px">${gapsHTML}</div>
+        <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:12px;">Learning resources</p>
+        <div class="skill-gaps">${resHTML}</div>
+      </div>
+    </div>
+
+    <div class="deep-section" id="sec-wins">
+      <div class="deep-section-header" onclick="toggleSection('sec-wins')">
+        <span class="deep-section-label">Start this week</span>
+        <span class="deep-section-chevron open" id="chev-sec-wins">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-wins">
+        <div class="roadmap-steps">${winsHTML}</div>
+      </div>
+    </div>
+
+    <div class="deep-section" id="sec-day">
+      <div class="deep-section-header" onclick="toggleSection('sec-day')">
+        <span class="deep-section-label">A day in the life</span>
+        <span class="deep-section-chevron open" id="chev-sec-day">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-day">
+        <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal);font-style:italic">"${d.dayInTheLife}"</p>
+      </div>
+    </div>
+
+    <div class="deep-section" id="sec-risks">
+      <div class="deep-section-header" onclick="toggleSection('sec-risks')">
+        <span class="deep-section-label">Honest risks</span>
+        <span class="deep-section-chevron open" id="chev-sec-risks">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-risks">
+        <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal)">${d.risks}</p>
+      </div>
+    </div>
+
+    <div class="deep-section" id="sec-ai">
+      <div class="deep-section-header" onclick="toggleSection('sec-ai')">
+        <span class="deep-section-label">🛡 AI-proofing this path</span>
+        <span class="deep-section-chevron open" id="chev-sec-ai">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-ai">
+        <div class="ai-proof-box"><p>${d.aiProofingAdvice}</p></div>
+        <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
+      </div>
     </div>`;
 
   document.getElementById('chatMessages').innerHTML='';
   state.chatHistory=[];
   addChatMessage('assistant',`I've mapped out the path to ${p.pathTitle} for you. What questions do you have?`);
+  // Reset jumper active state and init scroll spy
+  setActivePill('sec-roadmap');
+  setTimeout(initScrollSpy, 100);
+}
+
+// ─── SECTION JUMPER ───────────────────────────────────────────────────────────
+function jumpTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  // Expand if collapsed
+  const body=document.getElementById('body-'+id);
+  const chev=document.getElementById('chev-'+id);
+  if(body&&body.classList.contains('collapsed')){
+    body.classList.remove('collapsed');
+    if(chev)chev.classList.add('open');
+  }
+  const offset=57+52; // header + jumper height
+  const top=el.getBoundingClientRect().top+window.scrollY-offset-8;
+  window.scrollTo({top,behavior:'smooth'});
+  // Update active pill
+  setActivePill(id);
+}
+
+function setActivePill(id){
+  const map={
+    'sec-roadmap':'jp-roadmap','sec-gaps':'jp-gaps','sec-wins':'jp-wins',
+    'sec-day':'jp-day','sec-risks':'jp-risks','sec-ai':'jp-ai'
+  };
+  document.querySelectorAll('.jump-pill').forEach(p=>p.classList.remove('active'));
+  const pill=document.getElementById(map[id]);
+  if(pill){
+    pill.classList.add('active');
+    pill.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+}
+
+function toggleSection(id){
+  const body=document.getElementById('body-'+id);
+  const chev=document.getElementById('chev-'+id);
+  if(!body)return;
+  body.classList.toggle('collapsed');
+  if(chev)chev.classList.toggle('open');
+}
+
+// Scroll spy — update active jump pill as user scrolls
+function initScrollSpy(){
+  const sections=['sec-roadmap','sec-gaps','sec-wins','sec-day','sec-risks','sec-ai'];
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting)setActivePill(entry.target.id);
+    });
+  },{rootMargin:'-30% 0px -60% 0px',threshold:0});
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)observer.observe(el);
+  });
 }
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────────
