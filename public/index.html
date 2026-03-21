@@ -32,10 +32,11 @@
 
 
 
-  .info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--light-gray);color:var(--warm-gray);font-size:0.65rem;font-weight:700;cursor:pointer;margin-left:5px;flex-shrink:0;transition:var(--transition);vertical-align:middle;user-select:none;line-height:1;}
+  .info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--light-gray);color:var(--warm-gray);font-size:0.65rem;font-weight:700;cursor:pointer;margin-left:5px;flex-shrink:0;transition:var(--transition);vertical-align:middle;user-select:none;line-height:1;position:relative;z-index:10;}
   .info-icon:hover{background:var(--terracotta);color:white;}
-  .tooltip-box{display:none;background:var(--charcoal);color:var(--cream);font-size:0.77rem;line-height:1.5;padding:10px 14px;border-radius:10px;margin-top:8px;animation:fadeUp 0.2s ease;max-width:280px;}
+  .tooltip-box{display:none;position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 8px);background:var(--charcoal);color:var(--cream);font-size:0.77rem;line-height:1.5;padding:10px 14px;border-radius:10px;animation:fadeUp 0.2s ease;width:240px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.3);}
   .tooltip-box.visible{display:block;}
+  .tooltip-box::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:var(--charcoal);}
 
   .main{max-width:800px;margin:0 auto;padding:48px 24px 80px;}
   .hero{text-align:center;margin-bottom:48px;animation:fadeUp 0.6s ease both;}
@@ -47,6 +48,22 @@
   .privacy-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;display:inline-block;flex-shrink:0;}
   .disclaimer{margin-top:16px;padding:12px 20px;background:var(--terracotta-pale);border:1px solid var(--terracotta-light);border-radius:var(--radius-sm);font-size:0.78rem;color:var(--warm-gray);line-height:1.6;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;}
   .disclaimer-footer{text-align:center;font-size:0.75rem;color:var(--warm-gray);padding:24px 16px 8px;line-height:1.6;border-top:1px solid var(--light-gray);margin-top:32px;}
+
+  /* LEGEND */
+  .legend-card{background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--light-gray);margin-bottom:24px;overflow:hidden;animation:fadeUp 0.4s ease both;}
+  .legend-toggle{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;cursor:pointer;font-size:0.88rem;font-weight:600;color:var(--warm-gray);transition:var(--transition);user-select:none;}
+  .legend-toggle:hover{color:var(--terracotta);background:var(--terracotta-pale);}
+  .legend-arrow{font-size:0.7rem;transition:transform 0.3s ease;}
+  .legend-arrow.open{transform:rotate(180deg);}
+  .legend-body{display:none;padding:0 24px 20px;border-top:1px solid var(--light-gray);}
+  .legend-body.visible{display:block;}
+  .legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px;}
+  .legend-section-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--terracotta);margin-bottom:12px;}
+  .legend-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:0.82rem;color:var(--warm-gray);line-height:1.5;}
+  .legend-item strong{color:var(--charcoal);}
+  .legend-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:50px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+  .legend-dots{display:flex;gap:3px;flex-shrink:0;margin-top:3px;}
+  @media(max-width:600px){.legend-grid{grid-template-columns:1fr;}}
   .form-footer{margin-top:24px;padding:20px 0 8px;border-top:1px solid var(--light-gray);text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;}
   .form-footer-disclaimer{font-size:0.73rem;color:var(--warm-gray);line-height:1.6;max-width:480px;}
 
@@ -334,6 +351,38 @@
       <h2>Your career possibilities</h2>
       <p>Four paths mapped for you — tap any to explore it in depth.</p>
     </div>
+
+    <!-- LEGEND -->
+    <div class="legend-card" id="legendCard">
+      <div class="legend-toggle" onclick="toggleLegend()">
+        <span>📖 How to read these cards</span>
+        <span class="legend-arrow" id="legendArrow">▼</span>
+      </div>
+      <div class="legend-body" id="legendBody">
+        <div class="legend-grid">
+          <div class="legend-section">
+            <div class="legend-section-title">Path types</div>
+            <div class="legend-item"><span class="legend-badge badge-levelup">⬆ Level Up</span><span>Grow and get promoted within your current role — no job change needed.</span></div>
+            <div class="legend-item"><span class="legend-badge badge-adjacent">→ Adjacent</span><span>A realistic pivot using most of your existing skills. Lower risk, faster to achieve.</span></div>
+            <div class="legend-item"><span class="legend-badge badge-bold">↗ Bold</span><span>A meaningful reinvention requiring new skills but achievable with focused effort.</span></div>
+            <div class="legend-item"><span class="legend-badge badge-moonshot">🚀 Moonshot</span><span>A high-ambition swing requiring serious investment — but potentially transformational.</span></div>
+          </div>
+          <div class="legend-section">
+            <div class="legend-section-title">Card metrics</div>
+            <div class="legend-item">
+              <span class="legend-dots"><span class="effort-dot filled"></span><span class="effort-dot filled"></span><span class="effort-dot filled"></span><span class="effort-dot"></span><span class="effort-dot"></span></span>
+              <span><strong>Effort</strong> — How much work is needed relative to your current skills. 1 dot = minimal stretch, 5 dots = major investment.</span>
+            </div>
+            <div class="legend-item"><span>⏱</span><span><strong>Timeline</strong> — A realistic estimate based on your profile, not best-case scenario.</span></div>
+            <div class="legend-item"><span>🛡</span><span><strong>AI-resilient</strong> — This career is durable against AI disruption over the next 5–10 years.</span></div>
+            <div class="legend-item"><span>⚡</span><span><strong>Moderate AI risk</strong> — Some tasks in this career will be automated, but the role remains relevant.</span></div>
+            <div class="legend-item"><span>⚠️</span><span><strong>High AI risk</strong> — Core parts of this role are likely to be significantly disrupted by AI.</span></div>
+            <div class="legend-item"><span style="font-style:italic;font-size:0.82rem">ELI5</span><span><strong>ELI5: In Plain English</strong> — A jargon-free summary you can share with anyone who isn't in your field.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="path-cards-container"></div>
     <div class="text-center mt-24"><button class="btn btn-secondary" onclick="showScreen('form')">← Start over</button></div>
     <div class="disclaimer-footer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before making major career decisions.</div>
@@ -383,6 +432,13 @@ function toggleTheme(){
 }
 
 // ─── TOOLTIPS ─────────────────────────────────────────────────────────────────
+function toggleLegend(){
+  const body=document.getElementById('legendBody');
+  const arrow=document.getElementById('legendArrow');
+  body.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
 function toggleTooltip(id){
   const el=document.getElementById(id);
   const wasVisible=el.classList.contains('visible');
@@ -607,7 +663,7 @@ function renderPaths(){
       <div class="path-title">${p.pathTitle}</div>
       <div class="path-tagline">${p.tagline}</div>
       <div class="path-eli5">
-        <strong>In plain English <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('e5')}')">i</span></strong>
+        <strong>ELI5: In Plain English <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('e5')}')">i</span></strong>
         <div class="tooltip-box" id="${T('e5')}">${ELI5_TIP}</div>
         ${p.eli5}
       </div>
