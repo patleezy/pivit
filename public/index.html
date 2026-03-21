@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pivit — Your Career Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F3EE;
+    --warm-white: #FDFAF7;
+    --terracotta: #C4714A;
+    --terracotta-light: #E8A882;
+    --terracotta-pale: #F5E6DC;
+    --sage: #7A9E8E;
+    --sage-light: #B2CEBD;
+    --sage-pale: #E8F2EC;
+    --charcoal: #2D2926;
+    --warm-gray: #6B6259;
+    --light-gray: #D4CCC5;
+    --card-bg: #FFFFFF;
+    --shadow: 0 4px 24px rgba(45,41,38,0.08);
+    --shadow-hover: 0 8px 40px rgba(45,41,38,0.14);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="dark"] {
+    --cream: #0F1923;
+    --warm-white: #111E2A;
+    --terracotta: #E08860;
+    --terracotta-light: #C4714A;
+    --terracotta-pale: #1E1610;
+    --sage: #38BDF8;
+    --sage-light: #7DD3FC;
+    --sage-pale: #0C1E2E;
+    --charcoal: #E2EEF8;
+    --warm-gray: #7A9AB8;
+    --light-gray: #1E3045;
+    --card-bg: #162535;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-hover: 0 8px 40px rgba(0,0,0,0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--light-gray);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(12px);
+    transition: var(--transition);
+  }
+
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--terracotta);
+    letter-spacing: -0.02em;
+  }
+
+  .logo span {
+    color: var(--charcoal);
+    font-style: italic;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .theme-toggle {
+    background: var(--card-bg);
+    border: 1px solid var(--light-gray);
+    border-radius: 50px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .theme-toggle:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--terracotta-pale);
+    color: var(--terracotta);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--charcoal);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--warm-gray);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* PRIVACY NOTE */
+  .privacy-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+  }
+
+  .privacy-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--sage);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px;
+    margin-bottom: 24px;
+    border: 1px solid var(--light-gray);
+    transition: var(--transition);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .card-title {
+    font-family: 'Lora', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .icon {
+    width: 32px;
+    height: 32px;
+    background: var(--terracotta-pale);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-grid.single { grid-template-columns: 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--warm-gray);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .required-star { color: var(--terracotta); }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    background: var(--cream);
+    border: 1.5px solid var(--light-gray);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--charcoal);
+    transition: var(--transition);
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--terracotta);
+    background: var(--warm-white);
+    box-shadow: 0 0 0 3px rgba(196,113,74,0.12);
+  }
+
+  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+  /* MULTI SELECT PILLS */
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1.5px solid var(--light-gray);
+    background: var(--cream);
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .pill:hover { border-color: var(--terracotta-light); color: var(--terracotta); }
+
+  .pill.selected {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+    font-weight: 500;
+  }
+
+  /* SLIDER */
+  .slider-wrapper { display: flex; flex-direction: column; gap: 8px; }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--warm-gray); }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(to right, var(--terracotta) 0%, var(--terracotta) 50%, var(--light-gray) 50%, var(--light-gray) 100%);
+    outline: none;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(196,113,74,0.3);
+  }
+
+  /* OPTIONAL SECTION */
+  .optional-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 16px 0;
+    border-top: 1px solid var(--light-gray);
+    margin-top: 8px;
+    color: var(--warm-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition);
+    user-select: none;
+  }
+
+  .optional-toggle:hover { color: var(--terracotta); }
+
+  .toggle-arrow {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--terracotta-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: var(--terracotta);
+    transition: transform 0.3s ease;
+  }
+
+  .toggle-arrow.open { transform: rotate(180deg); }
+
+  .optional-fields {
+    display: none;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .optional-fields.visible { display: block; }
+
+  /* SAVE TOGGLE */
+  .save-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--sage-pale);
+    border-radius: var(--radius-sm);
+    margin-top: 8px;
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch input { display: none; }
+
+  .toggle-switch .slider-track {
+    position: absolute;
+    inset: 0;
+    background: var(--light-gray);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .toggle-switch input:checked + .slider-track { background: var(--sage); }
+
+  .toggle-switch .slider-track::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: var(--transition);
+  }
+
+  .toggle-switch input:checked + .slider-track::after { transform: translateX(20px); }
+
+  .save-toggle-text { font-size: 0.85rem; color: var(--warm-gray); line-height: 1.4; }
+  .save-toggle-text strong { color: var(--charcoal); display: block; font-size: 0.88rem; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 16px rgba(196,113,74,0.3);
+    width: 100%;
+    padding: 18px;
+    font-size: 1rem;
+    margin-top: 8px;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #B5633D;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196,113,74,0.4);
+  }
+
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    background: var(--card-bg);
+    color: var(--warm-gray);
+    border: 1.5px solid var(--light-gray);
+    padding: 12px 24px;
+    font-size: 0.88rem;
+  }
+
+  .btn-secondary:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--warm-gray);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn-ghost:hover { color: var(--terracotta); }
+
+  /* LOADING */
+  .loading-state {
+    text-align: center;
+    padding: 64px 32px;
+    animation: fadeUp 0.4s ease;
+  }
+
+  .loading-orb {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--terracotta-pale);
+    margin: 0 auto 24px;
+    position: relative;
+    animation: pulse 2s ease infinite;
+  }
+
+  .loading-orb::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 3px solid var(--terracotta);
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+
+  .loading-text {
+    font-family: 'Lora', serif;
+    font-size: 1.2rem;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .loading-sub { font-size: 0.88rem; color: var(--warm-gray); }
+
+  /* PATH CARDS */
+  .paths-header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .paths-header h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+  }
+
+  .paths-header p { color: var(--warm-gray); font-size: 0.95rem; }
+
+  .path-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--light-gray);
+    cursor: pointer;
+    transition: var(--transition);
+    animation: fadeUp 0.5s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .path-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--terracotta);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+
+  .path-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+    border-color: var(--terracotta-light);
+  }
+
+  .path-card:hover::before { transform: scaleX(1); }
+
+  .path-card:nth-child(2) { animation-delay: 0.1s; }
+  .path-card:nth-child(3) { animation-delay: 0.2s; }
+
+  .path-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .badge-adjacent { background: var(--sage-pale); color: var(--sage); }
+  .badge-bold { background: var(--terracotta-pale); color: var(--terracotta); }
+  .badge-moonshot { background: #EDE8F5; color: #7B5EA7; }
+
+  .path-title {
+    font-family: 'Lora', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 10px;
+  }
+
+  .path-tagline {
+    font-size: 0.95rem;
+    color: var(--warm-gray);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .path-eli5 {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    color: var(--warm-gray);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--terracotta-light);
+  }
+
+  .path-eli5 strong { font-style: normal; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta); display: block; margin-bottom: 4px; }
+
+  .path-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--warm-gray);
+  }
+
+  .effort-dots { display: flex; gap: 4px; }
+
+  .effort-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light-gray);
+  }
+
+  .effort-dot.filled { background: var(--terracotta); }
+
+  .ai-resilience {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    padding: 4px 10px;
+    border-radius: 50px;
+    background: var(--sage-pale);
+    color: var(--sage);
+    font-weight: 500;
+  }
+
+  .path-cta {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* DEEP DIVE */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--warm-gray);
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: var(--transition);
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0;
+  }
+
+  .back-btn:hover { color: var(--terracotta); }
+
+  .deep-header {
+    margin-bottom: 32px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .deep-header h2 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 14px;
+    margin-top: 28px;
+  }
+
+  .roadmap-steps { display: flex; flex-direction: column; gap: 12px; }
+
+  .roadmap-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-content { flex: 1; }
+  .step-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
+  .step-detail { font-size: 0.85rem; color: var(--warm-gray); line-height: 1.5; }
+
+  .skill-gaps { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .gap-pill {
+    padding: 8px 16px;
+    background: var(--terracotta-pale);
+    color: var(--terracotta);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .ai-proof-box {
+    background: var(--sage-pale);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border-left: 3px solid var(--sage);
+  }
+
+  .ai-proof-box p { font-size: 0.9rem; color: var(--charcoal); line-height: 1.65; }
+
+  /* EXPORT BAR */
+  .export-bar {
+    position: sticky;
+    bottom: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--light-gray);
+    border-radius: 50px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-hover);
+    margin-top: 32px;
+    animation: slideUp 0.4s ease both;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .export-label { font-size: 0.82rem; color: var(--warm-gray); font-weight: 500; white-space: nowrap; }
+
+  .export-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1.5px solid var(--light-gray);
+    background: var(--cream);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .export-btn:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-pale); }
+
+  /* CHAT */
+  .chat-section { margin-top: 32px; animation: fadeUp 0.5s ease both; }
+
+  .chat-title {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    color: var(--charcoal);
+  }
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px;
+  }
+
+  .message {
+    display: flex;
+    gap: 12px;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .message.user { flex-direction: row-reverse; }
+
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .message.assistant .message-avatar { background: var(--terracotta-pale); color: var(--terracotta); }
+  .message.user .message-avatar { background: var(--sage-pale); color: var(--sage); }
+
+  .message-bubble {
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .message.assistant .message-bubble {
+    background: var(--card-bg);
+    border: 1px solid var(--light-gray);
+    border-bottom-left-radius: 4px;
+    color: var(--charcoal);
+  }
+
+  .message.user .message-bubble {
+    background: var(--terracotta);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1.5px solid var(--light-gray);
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--charcoal);
+    resize: none;
+    outline: none;
+    transition: var(--transition);
+    min-height: 52px;
+    max-height: 120px;
+  }
+
+  .chat-input:focus { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(196,113,74,0.12); }
+
+  .chat-send {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    flex-shrink: 0;
+  }
+
+  .chat-send:hover:not(:disabled) { background: #B5633D; transform: scale(1.05); }
+  .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* EXPLORE OTHER */
+  .explore-other {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--light-gray);
+    margin-top: 16px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .header { padding: 14px 20px; }
+    .main { padding: 32px 16px 80px; }
+    .card { padding: 24px 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: 1; }
+    .export-bar { bottom: 12px; border-radius: var(--radius-sm); }
+  }
+
+  /* UTILITY */
+  .hidden { display: none !important; }
+  .text-center { text-align: center; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .divider { border: none; border-top: 1px solid var(--light-gray); margin: 24px 0; }
+
+  .disclaimer {
+    margin-top: 16px;
+    padding: 12px 20px;
+    background: var(--terracotta-pale);
+    border: 1px solid var(--terracotta-light);
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+    line-height: 1.6;
+    text-align: left;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .disclaimer-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--warm-gray);
+    padding: 24px 16px 8px;
+    line-height: 1.6;
+    border-top: 1px solid var(--light-gray);
+    margin-top: 32px;
+  }
+
+  .clear-data-link {
+    color: var(--warm-gray);
+    font-size: 0.78rem;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: var(--transition);
+  }
+
+  .clear-data-link:hover { color: var(--terracotta); }
+
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--charcoal);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">Piv<span>it</span></div>
+  <div class="header-actions">
+    <button class="clear-data-link" onclick="clearData()" id="clearBtn" style="display:none">Clear my data</button>
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SCREEN: FORM -->
+  <div id="screen-form">
+    <div class="hero">
+      <div class="hero-eyebrow">Career Intelligence</div>
+      <h1>Where could your career <em>go next?</em></h1>
+      <p>Tell Pivit where you are. We'll map honest, thoughtful paths to where you could be.</p>
+      <div class="privacy-note">
+        <span class="privacy-dot"></span>
+        Your data never leaves your device or gets stored on our servers. Ever.
+      </div>
+      <div class="disclaimer">
+        ⚠️ Pivit is AI-generated and intended for educational and exploratory purposes only. It is not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Always consult a real human expert before making major career decisions.
+      </div>
+    </div>
+
+    <!-- REQUIRED FIELDS -->
+    <div class="card" style="animation-delay:0.1s">
+      <div class="card-title">
+        <div class="icon">✦</div>
+        The essentials
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Age <span class="required-star">*</span></label>
+          <input type="number" id="age" placeholder="e.g. 32" min="18" max="75">
+        </div>
+        <div class="field">
+          <label>Current Role / Title <span class="required-star">*</span></label>
+          <input type="text" id="role" placeholder="e.g. Senior Product Manager">
+        </div>
+        <div class="field">
+          <label>Industry <span class="required-star">*</span></label>
+          <input type="text" id="industry" placeholder="e.g. Consumer Tech, Healthcare">
+        </div>
+        <div class="field">
+          <label>Top Skills <span class="required-star">*</span></label>
+          <input type="text" id="skills" placeholder="e.g. Product strategy, data analysis, stakeholder mgmt">
+        </div>
+        <div class="field full">
+          <label>I want more of this in my next chapter <span class="required-star">*</span></label>
+          <div class="pill-group" id="goals-pills">
+            <div class="pill" data-value="money" onclick="togglePill(this,'goals')">💰 Money</div>
+            <div class="pill" data-value="flexibility" onclick="togglePill(this,'goals')">🕐 Flexibility</div>
+            <div class="pill" data-value="fulfillment" onclick="togglePill(this,'goals')">✨ Fulfillment</div>
+            <div class="pill" data-value="impact" onclick="togglePill(this,'goals')">🌍 Impact</div>
+            <div class="pill" data-value="creativity" onclick="togglePill(this,'goals')">🎨 Creativity</div>
+            <div class="pill" data-value="autonomy" onclick="togglePill(this,'goals')">🧭 Autonomy</div>
+            <div class="pill" data-value="status" onclick="togglePill(this,'goals')">🏆 Status</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTIONAL TOGGLE -->
+      <div class="optional-toggle" onclick="toggleOptional()">
+        <div class="toggle-arrow" id="optionalArrow">▼</div>
+        Help Pivit understand you better (optional but worth it)
+      </div>
+
+      <div class="optional-fields" id="optionalFields">
+        <div class="form-grid mt-16">
+          <div class="field">
+            <label>Years of Experience</label>
+            <input type="number" id="experience" placeholder="e.g. 8" min="0" max="50">
+          </div>
+          <div class="field">
+            <label>Education</label>
+            <input type="text" id="education" placeholder="e.g. BS Computer Science, MBA">
+          </div>
+          <div class="field">
+            <label>Target Timeline</label>
+            <select id="timeline">
+              <option value="">— Select —</option>
+              <option value="1 year">Within 1 year</option>
+              <option value="2-3 years">2–3 years</option>
+              <option value="5+ years">5+ years</option>
+              <option value="no rush">No rush, just exploring</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Location Flexibility</label>
+            <select id="location">
+              <option value="">— Select —</option>
+              <option value="remote only">Remote only</option>
+              <option value="hybrid">Open to hybrid</option>
+              <option value="open to relocate">Open to relocate</option>
+              <option value="local only">Local only</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>I want less of this in my next role</label>
+            <div class="pill-group" id="avoids-pills">
+              <div class="pill" data-value="politics" onclick="togglePill(this,'avoids')">🏛 Office politics</div>
+              <div class="pill" data-value="travel" onclick="togglePill(this,'avoids')">✈️ Heavy travel</div>
+              <div class="pill" data-value="management" onclick="togglePill(this,'avoids')">👥 People management</div>
+              <div class="pill" data-value="uncertainty" onclick="togglePill(this,'avoids')">🎲 Uncertainty</div>
+              <div class="pill" data-value="repetition" onclick="togglePill(this,'avoids')">🔁 Repetitive work</div>
+              <div class="pill" data-value="screens" onclick="togglePill(this,'avoids')">💻 All-day screens</div>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Risk Tolerance</label>
+            <div class="slider-wrapper">
+              <input type="range" id="risk" min="1" max="5" value="3" oninput="updateRiskSlider(this)">
+              <div class="slider-labels">
+                <span>🏠 Play it safe</span>
+                <span>🚀 Ready to leap</span>
+              </div>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Anything else Pivit should know?</label>
+            <textarea id="context" placeholder="e.g. I have a family to support, I'm burned out, I want to start something of my own someday..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVE TOGGLE -->
+    <div class="card" style="animation-delay:0.2s; padding: 24px 32px;">
+      <div class="save-toggle">
+        <label class="toggle-switch">
+          <input type="checkbox" id="saveProfile" onchange="handleSaveToggle(this)">
+          <div class="slider-track"></div>
+        </label>
+        <div class="save-toggle-text">
+          <strong>Remember my profile</strong>
+          Saved only on this device, never on our servers.
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="generatePaths()" id="generateBtn">
+      Map my possibilities →
+    </button>
+  </div>
+
+  <!-- SCREEN: LOADING -->
+  <div id="screen-loading" class="hidden">
+    <div class="loading-state">
+      <div class="loading-orb"></div>
+      <div class="loading-text" id="loadingText">Mapping your possibilities...</div>
+      <div class="loading-sub">Pivit is thinking deeply about your career</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: PATHS -->
+  <div id="screen-paths" class="hidden">
+    <div class="paths-header">
+      <h2>Your career possibilities</h2>
+      <p>Three honest paths, mapped just for you. Tap one to explore it deeply.</p>
+    </div>
+    <div id="path-cards-container"></div>
+    <div class="text-center mt-24">
+      <button class="btn btn-secondary" onclick="showScreen('form')">← Start over</button>
+    </div>
+    <div class="disclaimer-footer">
+      ⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional. Consult a real expert before making major career decisions.
+    </div>
+  </div>
+
+  <!-- SCREEN: DEEP DIVE -->
+  <div id="screen-deep" class="hidden">
+    <button class="back-btn" onclick="showScreen('paths')">← Back to all paths</button>
+    <div id="deep-content"></div>
+
+    <!-- EXPORT BAR -->
+    <div class="export-bar">
+      <span class="export-label">Save your report</span>
+      <div class="export-buttons">
+        <button class="export-btn" onclick="exportPDF()">📄 PDF</button>
+        <button class="export-btn" onclick="exportEmail()">✉️ Email</button>
+        <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-section card">
+      <div class="chat-title">Ask Pivit anything about this path</div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="e.g. What if I don't want to go back to school?" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="chat-send" onclick="sendChat()" id="chatSendBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+
+      <div class="explore-other">
+        <button class="btn btn-ghost" onclick="showScreen('paths')">Explore a different path →</button>
+      </div>
+    </div>
+    <div class="disclaimer-footer">
+      ⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional. Consult a real expert before making major career decisions.
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const state = {
+  profile: {},
+  paths: [],
+  selectedPath: null,
+  deepDive: null,
+  chatHistory: [],
+  theme: 'light'
+};
+
+const selectedPills = { goals: [], avoids: [] };
+
+// ─── THEME ───────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.getElementById('themeIcon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Light' : 'Dark';
+  if (localStorage.getItem('pivit_save') === 'true') {
+    localStorage.setItem('pivit_theme', state.theme);
+  }
+}
+
+// ─── PILLS ───────────────────────────────────────────────────────────────────
+function togglePill(el, group) {
+  el.classList.toggle('selected');
+  const val = el.dataset.value;
+  const arr = selectedPills[group];
+  const idx = arr.indexOf(val);
+  if (idx === -1) arr.push(val);
+  else arr.splice(idx, 1);
+}
+
+// ─── OPTIONAL FIELDS ─────────────────────────────────────────────────────────
+function toggleOptional() {
+  const fields = document.getElementById('optionalFields');
+  const arrow = document.getElementById('optionalArrow');
+  fields.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+// ─── SLIDER ──────────────────────────────────────────────────────────────────
+function updateRiskSlider(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.background = `linear-gradient(to right, var(--terracotta) 0%, var(--terracotta) ${pct}%, var(--light-gray) ${pct}%, var(--light-gray) 100%)`;
+}
+
+// ─── SAVE / LOAD ──────────────────────────────────────────────────────────────
+function handleSaveToggle(checkbox) {
+  if (checkbox.checked) {
+    saveProfile();
+    document.getElementById('clearBtn').style.display = 'inline';
+  } else {
+    localStorage.removeItem('pivit_profile');
+    localStorage.removeItem('pivit_save');
+    document.getElementById('clearBtn').style.display = 'none';
+  }
+}
+
+function saveProfile() {
+  const profile = collectProfile();
+  localStorage.setItem('pivit_profile', JSON.stringify({ ...profile, pills: selectedPills, theme: state.theme }));
+  localStorage.setItem('pivit_save', 'true');
+}
+
+function loadProfile() {
+  const saved = localStorage.getItem('pivit_profile');
+  const saveEnabled = localStorage.getItem('pivit_save') === 'true';
+  if (!saved || !saveEnabled) return;
+
+  const data = JSON.parse(saved);
+  document.getElementById('saveProfile').checked = true;
+  document.getElementById('clearBtn').style.display = 'inline';
+
+  const fields = ['age','role','industry','skills','experience','education','timeline','location','context'];
+  fields.forEach(f => { if (data[f] && document.getElementById(f)) document.getElementById(f).value = data[f]; });
+
+  if (data.risk) {
+    document.getElementById('risk').value = data.risk;
+    updateRiskSlider(document.getElementById('risk'));
+  }
+
+  if (data.pills) {
+    ['goals','avoids'].forEach(group => {
+      (data.pills[group] || []).forEach(val => {
+        const pill = document.querySelector(`#${group}-pills .pill[data-value="${val}"]`);
+        if (pill) { pill.classList.add('selected'); selectedPills[group].push(val); }
+      });
+    });
+  }
+
+  if (data.theme) {
+    state.theme = data.theme;
+    document.documentElement.setAttribute('data-theme', state.theme);
+    document.getElementById('themeIcon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+    document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Light' : 'Dark';
+  }
+}
+
+function clearData() {
+  if (!confirm('Clear all your saved profile data?')) return;
+  localStorage.removeItem('pivit_profile');
+  localStorage.removeItem('pivit_save');
+  localStorage.removeItem('pivit_theme');
+  document.getElementById('saveProfile').checked = false;
+  document.getElementById('clearBtn').style.display = 'none';
+  showToast('Profile data cleared');
+}
+
+// ─── COLLECT PROFILE ─────────────────────────────────────────────────────────
+function collectProfile() {
+  return {
+    age: document.getElementById('age').value,
+    role: document.getElementById('role').value,
+    industry: document.getElementById('industry').value,
+    skills: document.getElementById('skills').value,
+    goals: selectedPills.goals,
+    experience: document.getElementById('experience').value,
+    education: document.getElementById('education').value,
+    timeline: document.getElementById('timeline').value,
+    location: document.getElementById('location').value,
+    avoids: selectedPills.avoids,
+    risk: document.getElementById('risk').value,
+    context: document.getElementById('context').value
+  };
+}
+
+function validateProfile(p) {
+  if (!p.age) return 'Please enter your age';
+  if (!p.role) return 'Please enter your current role';
+  if (!p.industry) return 'Please enter your industry';
+  if (!p.skills) return 'Please enter your top skills';
+  if (!p.goals.length) return 'Please select at least one goal';
+  return null;
+}
+
+// ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
+function showScreen(name) {
+  ['form','loading','paths','deep'].forEach(s => {
+    document.getElementById(`screen-${s}`).classList.toggle('hidden', s !== name);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── API CALL (proxied via /api/chat — key lives server-side) ─────────────────
+async function callClaude(messages, systemPrompt) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, systemPrompt })
+  });
+
+  if (!res.ok) {
+    let errMsg = `HTTP ${res.status}`;
+    try {
+      const b = await res.json();
+      errMsg += ': ' + (b.error || JSON.stringify(b));
+    } catch {}
+    throw new Error(errMsg);
+  }
+
+  const data = await res.json();
+  if (!data.content) throw new Error('Empty response from API');
+  return data.content;
+}
+
+// ─── ROBUST JSON PARSE ────────────────────────────────────────────────────────
+function extractJSON(raw) {
+  // Strip markdown fences
+  let cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  // Find the first { and last } to isolate the JSON object
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start === -1 || end === -1) throw new Error('No JSON object found in response');
+  cleaned = cleaned.slice(start, end + 1);
+  return JSON.parse(cleaned);
+}
+
+// ─── STAGE 1: GENERATE PATHS ─────────────────────────────────────────────────
+async function generatePaths() {
+  const profile = collectProfile();
+  const error = validateProfile(profile);
+  if (error) { showToast(error); return; }
+
+  state.profile = profile;
+  if (document.getElementById('saveProfile').checked) saveProfile();
+
+  showScreen('loading');
+
+  const systemPrompt = `You are Pivit, a warm, honest, and deeply knowledgeable career advisor. You are not a cheerleader — you give realistic, specific, actionable guidance. You care deeply about the person. Never make guarantees about outcomes. Be honest about long-shot paths. Be age-aware but never ageist. Do not give financial advice. Do not name specific companies or schools.
+
+You must respond with ONLY valid JSON — no preamble, no markdown, no backticks. Return this exact structure:
+{
+  "paths": [
+    {
+      "pathTitle": "string",
+      "pathType": "Adjacent" | "Bold" | "Moonshot",
+      "tagline": "string — one punchy sentence about why this fits them",
+      "effortScore": 1-5,
+      "timeline": "string e.g. ~18 months",
+      "eli5": "string — 2-3 sentences, zero jargon, explain to a curious non-professional friend",
+      "whyItFits": "string — specific to their background",
+      "keySkillGaps": ["string", ...],
+      "roadmapSteps": [
+        { "title": "string", "detail": "string", "timeEstimate": "string" }
+      ],
+      "aiResilienceScore": 1-5,
+      "aiResilienceNote": "string — what makes this path durable or vulnerable to AI",
+      "aiProofingAdvice": "string — 2-3 concrete moves to make this path more AI-proof",
+      "dayInTheLife": "string — a vivid 2-sentence sketch of a typical day in this role",
+      "risks": "string — honest risks and how to navigate them"
+    }
+  ]
+}`;
+
+  const userMsg = `Here is my career profile:
+- Age: ${profile.age}
+- Current role: ${profile.role}
+- Industry: ${profile.industry}
+- Top skills: ${profile.skills}
+- I want more of: ${profile.goals.join(', ')}
+- Years of experience: ${profile.experience || 'not specified'}
+- Education: ${profile.education || 'not specified'}
+- Target timeline: ${profile.timeline || 'not specified'}
+- Location flexibility: ${profile.location || 'not specified'}
+- I want less of: ${profile.avoids.join(', ') || 'not specified'}
+- Risk tolerance: ${profile.risk}/5
+- Additional context: ${profile.context || 'none'}
+
+Please generate 3 career paths: one Adjacent, one Bold, one Moonshot. Make them specific and honest. Each must feel genuinely tailored to my specific profile, not generic career advice.`;
+
+  try {
+    const raw = await callClaude([{ role: 'user', content: userMsg }], systemPrompt);
+    const parsed = extractJSON(raw);
+    if (!parsed.paths || !Array.isArray(parsed.paths)) throw new Error('Missing paths array in response');
+    state.paths = parsed.paths;
+    renderPaths();
+    showScreen('paths');
+  } catch (e) {
+    showScreen('form');
+    const msg = e.message || 'Unknown error';
+    showToast(`Error: ${msg.slice(0, 80)}`);
+    console.error('Stage 1 error:', e);
+  }
+}
+
+// ─── RENDER PATHS ─────────────────────────────────────────────────────────────
+function renderPaths() {
+  const container = document.getElementById('path-cards-container');
+  const badgeMap = {
+    Adjacent: { cls: 'badge-adjacent', icon: '→' },
+    Bold: { cls: 'badge-bold', icon: '↗' },
+    Moonshot: { cls: 'badge-moonshot', icon: '🚀' }
+  };
+
+  container.innerHTML = state.paths.map((p, i) => {
+    const badge = badgeMap[p.pathType] || badgeMap.Adjacent;
+    const dots = Array.from({ length: 5 }, (_, d) =>
+      `<div class="effort-dot${d < p.effortScore ? ' filled' : ''}"></div>`
+    ).join('');
+    const aiColor = p.aiResilienceScore >= 4 ? 'var(--sage)' : p.aiResilienceScore >= 3 ? 'var(--terracotta)' : '#C0392B';
+    const aiLabel = p.aiResilienceScore >= 4 ? '🛡 AI-resilient' : p.aiResilienceScore >= 3 ? '⚡ Moderate AI risk' : '⚠️ High AI risk';
+
+    return `
+    <div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
+      <div class="path-badge ${badge.cls}">${badge.icon} ${p.pathType}</div>
+      <div class="path-title">${p.pathTitle}</div>
+      <div class="path-tagline">${p.tagline}</div>
+      <div class="path-eli5">
+        <strong>In plain English</strong>
+        ${p.eli5}
+      </div>
+      <div class="path-meta">
+        <div class="meta-item">
+          <div class="effort-dots">${dots}</div>
+          <span>Effort</span>
+        </div>
+        <div class="meta-item">⏱ ${p.timeline}</div>
+        <div class="ai-resilience" style="color:${aiColor};background:${aiColor}15">${aiLabel}</div>
+      </div>
+      <div class="path-cta">
+        <span style="font-size:0.82rem;color:var(--warm-gray)">Tap to explore this path in depth</span>
+        <span style="color:var(--terracotta);font-size:1.1rem">→</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── STAGE 2: DEEP DIVE ───────────────────────────────────────────────────────
+async function selectPath(idx) {
+  state.selectedPath = state.paths[idx];
+  state.chatHistory = [];
+  showScreen('loading');
+  document.getElementById('loadingText').textContent = `Charting your path to ${state.selectedPath.pathTitle}...`;
+
+  const systemPrompt = `You are Pivit, a warm, deeply knowledgeable career advisor. Provide rich, specific, actionable guidance. Be honest. Never guarantee outcomes. Do not name specific companies or schools.
+
+Respond with ONLY valid JSON, no markdown, no backticks:
+{
+  "expandedRoadmap": [
+    { "title": "string", "detail": "string — 2-3 sentences of specific advice", "timeEstimate": "string" }
+  ],
+  "resources": ["string — types of learning resources, communities, certifications (no specific URLs)"],
+  "risks": "string — honest risks and how to navigate them",
+  "dayInTheLife": "string — a vivid paragraph about a typical day in this role",
+  "aiProofingAdvice": "string — 3 specific, concrete moves to make this career AI-proof",
+  "quickWins": ["string — things they can do this week to start"]
+}`;
+
+  const userMsg = `My profile: ${JSON.stringify(state.profile)}
+My chosen path: ${JSON.stringify(state.selectedPath)}
+Provide a detailed deep dive with an expanded roadmap, resources, honest risks, day in the life, AI-proofing advice, and quick wins I can start this week.`;
+
+  try {
+    const raw = await callClaude([{ role: 'user', content: userMsg }], systemPrompt);
+    state.deepDive = extractJSON(raw);
+    renderDeepDive();
+    showScreen('deep');
+  } catch (e) {
+    showScreen('paths');
+    const msg = e.message || 'Unknown error';
+    showToast(`Error: ${msg.slice(0, 80)}`);
+    console.error('Stage 2 error:', e);
+  }
+}
+
+// ─── RENDER DEEP DIVE ─────────────────────────────────────────────────────────
+function renderDeepDive() {
+  const p = state.selectedPath;
+  const d = state.deepDive;
+  const badgeMap = { Adjacent: 'badge-adjacent', Bold: 'badge-bold', Moonshot: 'badge-moonshot' };
+
+  const roadmapHTML = d.expandedRoadmap.map((step, i) => `
+    <div class="roadmap-step" style="animation-delay:${i*0.05}s">
+      <div class="step-num">${i+1}</div>
+      <div class="step-content">
+        <div class="step-title">${step.title} <span style="color:var(--warm-gray);font-weight:400;font-size:0.82rem">· ${step.timeEstimate}</span></div>
+        <div class="step-detail">${step.detail}</div>
+      </div>
+    </div>`).join('');
+
+  const gapsHTML = (p.keySkillGaps || []).map(g => `<div class="gap-pill">${g}</div>`).join('');
+
+  const quickWinsHTML = (d.quickWins || []).map(w => `
+    <div class="roadmap-step">
+      <div class="step-num" style="background:var(--sage)">✓</div>
+      <div class="step-content"><div class="step-detail">${w}</div></div>
+    </div>`).join('');
+
+  const resourcesHTML = (d.resources || []).map(r => `<div class="gap-pill" style="background:var(--sage-pale);color:var(--sage)">${r}</div>`).join('');
+
+  document.getElementById('deep-content').innerHTML = `
+    <div class="deep-header">
+      <div class="path-badge ${badgeMap[p.pathType]}" style="margin-bottom:12px">${p.pathType}</div>
+      <h2>${p.pathTitle}</h2>
+      <p style="color:var(--warm-gray);font-size:0.95rem;margin-top:8px">${p.tagline}</p>
+    </div>
+
+    <div class="card">
+      <div class="path-eli5" style="margin-bottom:0">
+        <strong>The short version</strong>
+        ${p.eli5}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Your roadmap</div>
+      <div class="roadmap-steps">${roadmapHTML}</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Skill gaps to close</div>
+      <div class="skill-gaps">${gapsHTML}</div>
+
+      <div class="section-title">Learning resources</div>
+      <div class="skill-gaps">${resourcesHTML}</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Start this week</div>
+      <div class="roadmap-steps">${quickWinsHTML}</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">A day in the life</div>
+      <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal);font-style:italic">"${d.dayInTheLife}"</p>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Honest risks</div>
+      <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal)">${d.risks}</p>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🛡 AI-proofing this path</div>
+      <div class="ai-proof-box">
+        <p>${d.aiProofingAdvice}</p>
+      </div>
+      <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">
+        AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}
+      </p>
+    </div>
+  `;
+
+  // Reset chat
+  document.getElementById('chatMessages').innerHTML = '';
+  state.chatHistory = [];
+  addChatMessage('assistant', `I've mapped out the path to ${p.pathTitle} for you. What questions do you have? I'm here to get real with you.`);
+}
+
+// ─── CHAT ─────────────────────────────────────────────────────────────────────
+function addChatMessage(role, text) {
+  const container = document.getElementById('chatMessages');
+  const initials = role === 'assistant' ? 'P' : 'You';
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+  div.innerHTML = `
+    <div class="message-avatar">${initials}</div>
+    <div class="message-bubble">${text}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  addChatMessage('user', msg);
+  state.chatHistory.push({ role: 'user', content: msg });
+
+  const sendBtn = document.getElementById('chatSendBtn');
+  sendBtn.disabled = true;
+
+  const typingDiv = addChatMessage('assistant', '<em style="color:var(--warm-gray)">Pivit is thinking...</em>');
+
+  const systemPrompt = `You are Pivit, a warm, honest career advisor. The user has selected a career path and you're having a follow-up conversation. Be specific, honest, and human. Keep responses concise (2-4 paragraphs max). Never guarantee outcomes. Do not name specific companies or schools. The user's profile: ${JSON.stringify(state.profile)}. Their chosen path: ${JSON.stringify(state.selectedPath)}.`;
+
+  const messages = [
+    { role: 'user', content: `Context on my path: ${JSON.stringify(state.deepDive)}` },
+    { role: 'assistant', content: `Got it. I've reviewed your path to ${state.selectedPath.pathTitle}. What would you like to explore?` },
+    ...state.chatHistory
+  ];
+
+  try {
+    const reply = await callClaude(messages, systemPrompt);
+    typingDiv.querySelector('.message-bubble').innerHTML = reply.replace(/\n/g, '<br>');
+    state.chatHistory.push({ role: 'assistant', content: reply });
+  } catch (e) {
+    typingDiv.querySelector('.message-bubble').innerHTML = 'Something went wrong. Please try again.';
+  }
+
+  sendBtn.disabled = false;
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function buildTextReport() {
+  const p = state.selectedPath;
+  const d = state.deepDive;
+  if (!p || !d) return '';
+
+  return `PIVIT CAREER REPORT
+Generated: ${new Date().toLocaleDateString()}
+═══════════════════════════════
+
+PATH: ${p.pathTitle} (${p.pathType})
+${p.tagline}
+
+THE SHORT VERSION
+${p.eli5}
+
+WHY THIS FITS YOU
+${p.whyItFits}
+
+YOUR ROADMAP
+${d.expandedRoadmap.map((s,i) => `${i+1}. ${s.title} (${s.timeEstimate})\n   ${s.detail}`).join('\n\n')}
+
+SKILL GAPS TO CLOSE
+${(p.keySkillGaps||[]).join(', ')}
+
+START THIS WEEK
+${(d.quickWins||[]).map((w,i) => `• ${w}`).join('\n')}
+
+A DAY IN THE LIFE
+${d.dayInTheLife}
+
+HONEST RISKS
+${d.risks}
+
+AI-PROOFING THIS PATH
+${d.aiProofingAdvice}
+
+AI Resilience Score: ${p.aiResilienceScore}/5
+${p.aiResilienceNote}
+
+───────────────────────────────
+Generated by Pivit · pivit.digital
+⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Consult a real expert before making major career decisions.
+Your data was never stored or shared.`;
+}
+
+function exportCopy() {
+  const text = buildTextReport();
+  if (!text) { showToast('No report to copy yet'); return; }
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Report copied to clipboard'));
+}
+
+function exportEmail() {
+  const text = buildTextReport();
+  if (!text) { showToast('No report to share yet'); return; }
+  const subject = encodeURIComponent(`My Pivit Career Report — ${state.selectedPath?.pathTitle}`);
+  const body = encodeURIComponent(text);
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+function exportPDF() {
+  const p = state.selectedPath;
+  const d = state.deepDive;
+  if (!p || !d) { showToast('No report to export yet'); return; }
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`<!DOCTYPE html><html><head>
+    <title>Pivit Report — ${p.pathTitle}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+      body { font-family: 'DM Sans', sans-serif; color: #2D2926; max-width: 680px; margin: 0 auto; padding: 48px 32px; }
+      h1 { font-family: 'Lora', serif; font-size: 2rem; color: #C4714A; margin-bottom: 4px; }
+      h2 { font-family: 'Lora', serif; font-size: 1.1rem; margin-top: 32px; margin-bottom: 8px; color: #2D2926; }
+      .badge { display: inline-block; background: #F5E6DC; color: #C4714A; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; margin-bottom: 12px; }
+      .eli5 { background: #F7F3EE; border-left: 3px solid #E8A882; padding: 16px; border-radius: 8px; font-style: italic; margin: 16px 0; }
+      .step { display: flex; gap: 12px; margin-bottom: 12px; }
+      .step-num { width: 24px; height: 24px; background: #C4714A; color: white; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+      .ai-box { background: #E8F2EC; border-left: 3px solid #7A9E8E; padding: 16px; border-radius: 8px; margin-top: 8px; }
+      .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #D4CCC5; font-size: 0.75rem; color: #6B6259; }
+      p { line-height: 1.7; font-size: 0.92rem; }
+    </style>
+  </head><body>
+    <div class="badge">${p.pathType} Path</div>
+    <h1>${p.pathTitle}</h1>
+    <p>${p.tagline}</p>
+    <div class="eli5"><strong style="font-style:normal;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:#C4714A">The short version</strong><br>${p.eli5}</div>
+    <h2>Why this fits you</h2><p>${p.whyItFits}</p>
+    <h2>Your roadmap</h2>
+    ${d.expandedRoadmap.map((s,i) => `<div class="step"><div class="step-num">${i+1}</div><div><strong>${s.title}</strong> · <em style="font-size:0.82rem;color:#6B6259">${s.timeEstimate}</em><br><span style="font-size:0.88rem">${s.detail}</span></div></div>`).join('')}
+    <h2>Start this week</h2>
+    ${(d.quickWins||[]).map(w => `<p>• ${w}</p>`).join('')}
+    <h2>A day in the life</h2><p style="font-style:italic">"${d.dayInTheLife}"</p>
+    <h2>Honest risks</h2><p>${d.risks}</p>
+    <h2>🛡 AI-proofing this path</h2>
+    <div class="ai-box"><p>${d.aiProofingAdvice}</p></div>
+    <p style="margin-top:8px;font-size:0.82rem;color:#6B6259">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
+    <div class="footer">Generated by Pivit · ${new Date().toLocaleDateString()} · Your data was never stored or shared.<br>⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional advisor.</div>
+  </body></html>`);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { printWindow.print(); }, 500);
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadProfile();
+updateRiskSlider(document.getElementById('risk'));
+</script>
+</body>
+</html>
