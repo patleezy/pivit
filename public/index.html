@@ -748,6 +748,8 @@ function showToast(msg){
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
+// Pre-warm the serverless function so the cold start doesn't hit on first use
+fetch('/api/ping').catch(()=>{});
 loadProfile();
 updateRiskSlider(document.getElementById('risk'));
 </script>
