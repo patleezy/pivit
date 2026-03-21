@@ -44,9 +44,11 @@
   .hero h1 em{color:var(--terracotta);font-style:italic;}
   .hero p{font-size:1.05rem;color:var(--warm-gray);max-width:500px;margin:0 auto;line-height:1.65;font-weight:300;}
   .privacy-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;font-size:0.78rem;color:var(--warm-gray);}
-  .privacy-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;display:inline-block;}
+  .privacy-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;display:inline-block;flex-shrink:0;}
   .disclaimer{margin-top:16px;padding:12px 20px;background:var(--terracotta-pale);border:1px solid var(--terracotta-light);border-radius:var(--radius-sm);font-size:0.78rem;color:var(--warm-gray);line-height:1.6;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;}
   .disclaimer-footer{text-align:center;font-size:0.75rem;color:var(--warm-gray);padding:24px 16px 8px;line-height:1.6;border-top:1px solid var(--light-gray);margin-top:32px;}
+  .form-footer{margin-top:24px;padding:20px 0 8px;border-top:1px solid var(--light-gray);text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;}
+  .form-footer-disclaimer{font-size:0.73rem;color:var(--warm-gray);line-height:1.6;max-width:480px;}
 
   .card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;margin-bottom:24px;border:1px solid var(--light-gray);transition:var(--transition);animation:fadeUp 0.6s ease both;}
   .card-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:600;color:var(--charcoal);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
@@ -200,12 +202,16 @@
 
   @media(max-width:600px){
     .header{padding:14px 20px;}
-    .main{padding:32px 16px 80px;}
+    .main{padding:32px 16px 120px;}
     .card{padding:24px 20px;}
     .form-grid{grid-template-columns:1fr;}
     .field.full{grid-column:1;}
     .export-bar{bottom:12px;border-radius:var(--radius-sm);}
     .cost-badge{display:none!important;}
+    .hero h1{font-size:1.8rem;}
+  }
+  @supports(-webkit-touch-callout:none){
+    .main{padding-bottom:140px;}
   }
 </style>
 </head>
@@ -230,8 +236,6 @@
       <div class="hero-eyebrow">Career Intelligence</div>
       <h1>Where could your career <em>go next?</em></h1>
       <p>Tell Pivit where you are. We'll map honest, thoughtful paths to where you could be.</p>
-      <div class="privacy-note"><span class="privacy-dot"></span>Your data never leaves your device or gets stored on our servers. Ever.</div>
-      <div class="disclaimer">⚠️ Pivit is AI-generated and intended for educational and exploratory purposes only. It is not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Always consult a real human expert before making major career decisions.</div>
     </div>
 
     <div class="card" style="animation-delay:0.1s">
@@ -299,6 +303,11 @@
     </div>
 
     <button class="btn btn-primary" onclick="generatePaths()">Map my possibilities →</button>
+
+    <div class="form-footer">
+      <div class="privacy-note"><span class="privacy-dot"></span>Your data never leaves your device or gets stored on our servers. Ever.</div>
+      <div class="form-footer-disclaimer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor or professional advisor. Always consult a real expert before making major career decisions.</div>
+    </div>
   </div>
 
   <!-- LOADING -->
@@ -486,7 +495,7 @@ function startLoadingProgress(steps,title){
   loadingTimeoutTimer=setTimeout(()=>{
     document.getElementById('loadingTimeout').classList.add('visible');
     document.getElementById('loadingSub').textContent='Almost there...';
-  },18000);
+  },28000);
 }
 function finishLoadingProgress(){
   document.getElementById('loadingProgressBar').style.width='100%';
