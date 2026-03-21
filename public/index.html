@@ -61,7 +61,11 @@
   .legend-section-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--terracotta);margin-bottom:12px;}
   .legend-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:0.82rem;color:var(--warm-gray);line-height:1.5;}
   .legend-item strong{color:var(--charcoal);}
-  .legend-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:50px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+  .legend-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:50px;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;border:1.5px solid transparent;}
+  .legend-badge.badge-levelup{background:var(--gold-pale);color:var(--gold);border-color:var(--gold);}
+  .legend-badge.badge-adjacent{background:var(--sage-pale);color:var(--sage);border-color:var(--sage);}
+  .legend-badge.badge-bold{background:var(--terracotta-pale);color:var(--terracotta);border-color:var(--terracotta);}
+  .legend-badge.badge-moonshot{background:#EDE8F5;color:#7B5EA7;border-color:#7B5EA7;}
   .legend-dots{display:flex;gap:3px;flex-shrink:0;margin-top:3px;}
   @media(max-width:600px){.legend-grid{grid-template-columns:1fr;}}
   .form-footer{margin-top:24px;padding:20px 0 8px;border-top:1px solid var(--light-gray);text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;}
@@ -145,21 +149,21 @@
   .path-card:nth-child(2){animation-delay:0.1s;}
   .path-card:nth-child(3){animation-delay:0.2s;}
   .path-card:nth-child(4){animation-delay:0.3s;}
-  .path-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
-  .badge-levelup{background:var(--gold-pale);color:var(--gold);}
-  .badge-adjacent{background:var(--sage-pale);color:var(--sage);}
-  .badge-bold{background:var(--terracotta-pale);color:var(--terracotta);}
-  .badge-moonshot{background:#EDE8F5;color:#7B5EA7;}
+  .path-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:50px;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:1.5px solid transparent;}
+  .badge-levelup{background:var(--gold-pale);color:var(--gold);border-color:var(--gold);}
+  .badge-adjacent{background:var(--sage-pale);color:var(--sage);border-color:var(--sage);}
+  .badge-bold{background:var(--terracotta-pale);color:var(--terracotta);border-color:var(--terracotta);}
+  .badge-moonshot{background:#EDE8F5;color:#7B5EA7;border-color:#7B5EA7;}
   .path-title{font-family:'Lora',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);margin-bottom:10px;}
   .path-tagline{font-size:0.95rem;color:var(--warm-gray);line-height:1.6;margin-bottom:16px;}
   .path-eli5{background:var(--cream);border-radius:var(--radius-sm);padding:14px 18px;font-size:0.88rem;color:var(--warm-gray);line-height:1.6;font-style:italic;margin-bottom:20px;border-left:3px solid var(--terracotta-light);}
   .path-eli5 strong{font-style:normal;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--terracotta);display:flex;align-items:center;margin-bottom:6px;}
   .path-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;}
   .meta-item{display:flex;align-items:center;gap:5px;font-size:0.82rem;color:var(--warm-gray);position:relative;}
-  .effort-dots{display:flex;gap:4px;}
-  .effort-dot{width:8px;height:8px;border-radius:50%;background:var(--light-gray);}
-  .effort-dot.filled{background:var(--terracotta);}
-  .ai-resilience{display:flex;align-items:center;gap:5px;font-size:0.82rem;padding:4px 10px;border-radius:50px;font-weight:500;}
+  .effort-dots{display:flex;gap:5px;}
+  .effort-dot{width:10px;height:10px;border-radius:50%;background:transparent;border:2px solid var(--warm-gray);flex-shrink:0;}
+  .effort-dot.filled{background:var(--terracotta);border-color:var(--terracotta);}
+  .ai-resilience{display:inline-flex;align-items:center;gap:5px;font-size:0.82rem;padding:4px 12px;border-radius:50px;font-weight:700;border:1.5px solid currentColor;}
   .path-cta{margin-top:20px;display:flex;align-items:center;justify-content:space-between;}
 
   /* DEEP DIVE */
@@ -315,14 +319,14 @@
     <div class="card" style="animation-delay:0.2s;padding:24px 32px;">
       <div class="save-toggle">
         <label class="toggle-switch"><input type="checkbox" id="saveProfile" onchange="handleSaveToggle(this)"><div class="slider-track"></div></label>
-        <div class="save-toggle-text"><strong>Remember my profile</strong>Saved only on this device, never on our servers.</div>
+        <div class="save-toggle-text"><strong>Remember my profile</strong>Saved in your browser only — never on a server.</div>
       </div>
     </div>
 
     <button class="btn btn-primary" onclick="generatePaths()">Map my possibilities →</button>
 
     <div class="form-footer">
-      <div class="privacy-note"><span class="privacy-dot"></span>Your data never leaves your device or gets stored on our servers. Ever.</div>
+      <div class="privacy-note"><span class="privacy-dot"></span>Your profile stays on your device. API calls are processed by Anthropic and not used for AI training. Nothing is stored after your session.</div>
       <div class="form-footer-disclaimer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor or professional advisor. Always consult a real expert before making major career decisions.</div>
     </div>
   </div>
@@ -636,15 +640,11 @@ Generate exactly 2 paths: first Bold (meaningful career reinvention, requires ne
 function renderPaths(){
   const c=document.getElementById('path-cards-container');
   const bmap={
-    LevelUp:{cls:'badge-levelup',icon:'⬆',tip:'Advice on growing, getting promoted, upskilling, and becoming more valuable in your current role — no job change needed.'},
-    Adjacent:{cls:'badge-adjacent',icon:'→',tip:'A realistic move using most of your existing skills. Lower risk, faster to achieve than a full reinvention.'},
-    Bold:{cls:'badge-bold',icon:'↗',tip:'A meaningful career change that requires new skills but is achievable with focused effort over time.'},
-    Moonshot:{cls:'badge-moonshot',icon:'🚀',tip:'A high-ambition path requiring serious time and investment — but could be transformational if you commit.'}
+    LevelUp:{cls:'badge-levelup',icon:'⬆'},
+    Adjacent:{cls:'badge-adjacent',icon:'→'},
+    Bold:{cls:'badge-bold',icon:'↗'},
+    Moonshot:{cls:'badge-moonshot',icon:'🚀'}
   };
-  const EFFORT_TIP='Estimated effort relative to your current skills and experience. 1 = minimal stretch, 5 = major investment.';
-  const TIME_TIP='A realistic estimate of how long this path takes based on your profile — not the best-case scenario.';
-  const AI_TIP='How resilient this career is against AI disruption over the next 5–10 years. Higher score = more durable.';
-  const ELI5_TIP='A plain-English summary you can share with friends or family who aren\'t in your field.';
 
   c.innerHTML=state.paths.map((p,i)=>{
     const b=bmap[p.pathType]||bmap.Adjacent;
@@ -653,36 +653,20 @@ function renderPaths(){
     const ac=sc>=4?'var(--sage)':sc>=3?'var(--terracotta)':'#C0392B';
     const al=sc>=4?'🛡 AI-resilient':sc>=3?'⚡ Moderate AI risk':'⚠️ High AI risk';
     const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
-    const T=(s)=>`t${i}${s}`;
     return`<div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <div class="path-badge ${b.cls}" style="margin-bottom:0">${b.icon} ${label}</div>
-        <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('b')}')" >i</span>
-      </div>
-      <div class="tooltip-box" id="${T('b')}">${b.tip}</div>
+      <div class="path-badge ${b.cls}" style="margin-bottom:14px">${b.icon} ${label}</div>
       <div class="path-title">${p.pathTitle}</div>
       <div class="path-tagline">${p.tagline}</div>
       <div class="path-eli5">
-        <strong>ELI5: In Plain English <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('e5')}')">i</span></strong>
-        <div class="tooltip-box" id="${T('e5')}">${ELI5_TIP}</div>
+        <strong>ELI5: In Plain English</strong>
         ${p.eli5}
       </div>
       <div class="path-meta">
         <div class="meta-item">
           <div class="effort-dots">${dots}</div><span>Effort</span>
-          <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('ef')}')">i</span>
-          <div class="tooltip-box" id="${T('ef')}">${EFFORT_TIP}</div>
         </div>
-        <div class="meta-item">
-          ⏱ ${p.timeline}
-          <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('tl')}')">i</span>
-          <div class="tooltip-box" id="${T('tl')}">${TIME_TIP}</div>
-        </div>
-        <div class="ai-resilience" style="color:${ac};background:${ac}18">
-          ${al}
-          <span class="info-icon" style="background:${ac}30;color:${ac}" onclick="event.stopPropagation();toggleTooltip('${T('ai')}')">i</span>
-          <div class="tooltip-box" id="${T('ai')}">${AI_TIP}${p.aiResilienceNote?' — '+p.aiResilienceNote:''}</div>
-        </div>
+        <div class="meta-item">⏱ ${p.timeline}</div>
+        <div class="ai-resilience" style="color:${ac};background:${ac}18">${al}</div>
       </div>
       <div class="path-cta">
         <span style="font-size:0.82rem;color:var(--warm-gray)">Tap to explore this path in depth</span>
@@ -798,7 +782,7 @@ function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrol
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
 function buildReport(){
   const p=state.selectedPath,d=state.deepDive;if(!p||!d)return'';
-  return`PIVIT CAREER REPORT\nGenerated: ${new Date().toLocaleDateString()}\n${'='.repeat(32)}\n\nPATH: ${p.pathTitle} (${p.pathType==='LevelUp'?'Level Up':p.pathType})\n${p.tagline}\n\nTHE SHORT VERSION\n${p.eli5}\n\nWHY THIS FITS YOU\n${p.whyItFits}\n\nROADMAP\n${(d.expandedRoadmap||[]).map((s,i)=>`${i+1}. ${s.title} (${s.timeEstimate})\n   ${s.detail}`).join('\n\n')}\n\nSKILL GAPS\n${(p.keySkillGaps||[]).join(', ')}\n\nSTART THIS WEEK\n${(d.quickWins||[]).map(w=>`• ${w}`).join('\n')}\n\nA DAY IN THE LIFE\n${d.dayInTheLife}\n\nHONEST RISKS\n${d.risks}\n\nAI-PROOFING\n${d.aiProofingAdvice}\n\nAI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}\n\n${'-'.repeat(32)}\nGenerated by Pivit\n⚠️ AI-generated for educational purposes only. Consult a qualified career professional.\nYour data was never stored or shared.`;
+  return`PIVIT CAREER REPORT\nGenerated: ${new Date().toLocaleDateString()}\n${'='.repeat(32)}\n\nPATH: ${p.pathTitle} (${p.pathType==='LevelUp'?'Level Up':p.pathType})\n${p.tagline}\n\nTHE SHORT VERSION\n${p.eli5}\n\nWHY THIS FITS YOU\n${p.whyItFits}\n\nROADMAP\n${(d.expandedRoadmap||[]).map((s,i)=>`${i+1}. ${s.title} (${s.timeEstimate})\n   ${s.detail}`).join('\n\n')}\n\nSKILL GAPS\n${(p.keySkillGaps||[]).join(', ')}\n\nSTART THIS WEEK\n${(d.quickWins||[]).map(w=>`• ${w}`).join('\n')}\n\nA DAY IN THE LIFE\n${d.dayInTheLife}\n\nHONEST RISKS\n${d.risks}\n\nAI-PROOFING\n${d.aiProofingAdvice}\n\nAI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}\n\n${'-'.repeat(32)}\nGenerated by Pivit\n⚠️ AI-generated for educational purposes only. Consult a qualified career professional.\nYour profile stays on your device. API calls processed by Anthropic, not used for training. Nothing stored after your session.`;
 }
 function exportCopy(){const t=buildReport();if(!t){showToast('No report yet');return;}navigator.clipboard.writeText(t).then(()=>showToast('✓ Copied to clipboard'));}
 function exportEmail(){const t=buildReport();if(!t){showToast('No report yet');return;}window.location.href=`mailto:?subject=${encodeURIComponent('My Pivit Career Report — '+(state.selectedPath?.pathTitle||''))}&body=${encodeURIComponent(t)}`;}
