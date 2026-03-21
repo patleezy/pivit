@@ -471,7 +471,7 @@ function validateProfile(p){
 
 // ─── LOADING PROGRESS ─────────────────────────────────────────────────────────
 let loadingTimers=[],loadingTimeoutTimer=null;
-const S1=[{id:1,text:'Reading your career profile'},{id:2,text:'Analyzing your skills and goals'},{id:3,text:'Mapping your paths'},{id:4,text:'Assessing effort and timelines'},{id:5,text:'Scoring AI resilience'}];
+const S1=[{id:1,text:'Reading your career profile'},{id:2,text:'Analyzing your skills and goals'},{id:3,text:'Mapping growth & adjacent paths'},{id:4,text:'Charting bold moves & moonshots'},{id:5,text:'Scoring AI resilience across all paths'}];
 const S2=[{id:1,text:'Reviewing your chosen path'},{id:2,text:'Building your roadmap'},{id:3,text:'Identifying skill gaps'},{id:4,text:'Sketching a day in the life'},{id:5,text:'Writing your AI-proofing strategy'}];
 
 function startLoadingProgress(steps,title){
@@ -491,7 +491,7 @@ function startLoadingProgress(steps,title){
     }
   }
   act(0);
-  loadingTimers=[1800,3200,5000,7500,9500].map((d,i)=>setTimeout(()=>act(i+1),d));
+  loadingTimers=[1200,2500,4000,6000,8000].map((d,i)=>setTimeout(()=>act(i+1),d));
   loadingTimeoutTimer=setTimeout(()=>{
     document.getElementById('loadingTimeout').classList.add('visible');
     document.getElementById('loadingSub').textContent='Almost there...';
@@ -527,7 +527,7 @@ function extractJSON(raw){
   return JSON.parse(c.slice(s,e+1));
 }
 
-// ─── STAGE 1 — lean card data only ────────────────────────────────────────────
+// ─── STAGE 1 — parallel calls for speed ───────────────────────────────────────
 async function generatePaths(){
   const profile=collectProfile(),err=validateProfile(profile);
   if(err){showToast(err);return;}
@@ -536,20 +536,37 @@ async function generatePaths(){
   showScreen('loading');
   startLoadingProgress(S1,'Mapping your possibilities...');
 
-  const sys=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
+  const profileStr=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
+
+  const sysA=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
-{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent"|"Bold"|"Moonshot","tagline":"string — one punchy sentence","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string — specific to their background","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
+{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
 
-Generate exactly 4 paths in this order: LevelUp (grow/promote within current role — no job change), Adjacent (low-friction pivot), Bold (meaningful reinvention), Moonshot (high-ambition swing). Be specific to their profile. Keep eli5 to 2 short sentences.`;
+Generate exactly 2 paths: first LevelUp (grow/promote within current role — no job change), then Adjacent (low-friction pivot using existing skills). Be specific to their profile.`;
 
-  const msg=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
+  const sysB=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
+
+Respond with ONLY valid JSON, no markdown:
+{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
+
+Generate exactly 2 paths: first Bold (meaningful career reinvention, requires new skills but achievable), then Moonshot (high-ambition swing, transformational if they commit). Be specific to their profile.`;
 
   try{
-    const raw=await callClaude([{role:'user',content:msg}],sys);
-    const parsed=extractJSON(raw);
-    if(!parsed.paths||!Array.isArray(parsed.paths))throw new Error('Missing paths array');
-    state.paths=parsed.paths;
+    // Fire both calls simultaneously
+    const [rawA, rawB] = await Promise.all([
+      callClaude([{role:'user',content:profileStr}], sysA),
+      callClaude([{role:'user',content:profileStr}], sysB)
+    ]);
+
+    const parsedA=extractJSON(rawA);
+    const parsedB=extractJSON(rawB);
+
+    if(!parsedA.paths||!parsedB.paths)throw new Error('Missing paths in response');
+
+    // Merge: LevelUp + Adjacent + Bold + Moonshot
+    state.paths=[...parsedA.paths,...parsedB.paths];
+
     finishLoadingProgress();
     setTimeout(()=>{renderPaths();showScreen('paths');},400);
   }catch(e){
