@@ -8,959 +8,205 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #F7F3EE;
-    --warm-white: #FDFAF7;
-    --terracotta: #C4714A;
-    --terracotta-light: #E8A882;
-    --terracotta-pale: #F5E6DC;
-    --sage: #7A9E8E;
-    --sage-light: #B2CEBD;
-    --sage-pale: #E8F2EC;
-    --charcoal: #2D2926;
-    --warm-gray: #6B6259;
-    --light-gray: #D4CCC5;
-    --card-bg: #FFFFFF;
-    --shadow: 0 4px 24px rgba(45,41,38,0.08);
-    --shadow-hover: 0 8px 40px rgba(45,41,38,0.14);
-    --radius: 20px;
-    --radius-sm: 12px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --cream:#F7F3EE;--warm-white:#FDFAF7;--terracotta:#C4714A;--terracotta-light:#E8A882;--terracotta-pale:#F5E6DC;
+    --sage:#7A9E8E;--sage-light:#B2CEBD;--sage-pale:#E8F2EC;--gold:#B8860B;--gold-pale:#FDF8E1;
+    --charcoal:#2D2926;--warm-gray:#6B6259;--light-gray:#D4CCC5;--card-bg:#FFFFFF;
+    --shadow:0 4px 24px rgba(45,41,38,0.08);--shadow-hover:0 8px 40px rgba(45,41,38,0.14);
+    --radius:20px;--radius-sm:12px;--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
   }
-
   [data-theme="dark"] {
-    --cream: #0F1923;
-    --warm-white: #111E2A;
-    --terracotta: #E08860;
-    --terracotta-light: #C4714A;
-    --terracotta-pale: #1E1610;
-    --sage: #38BDF8;
-    --sage-light: #7DD3FC;
-    --sage-pale: #0C1E2E;
-    --charcoal: #E2EEF8;
-    --warm-gray: #7A9AB8;
-    --light-gray: #1E3045;
-    --card-bg: #162535;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
-    --shadow-hover: 0 8px 40px rgba(0,0,0,0.55);
+    --cream:#0F1923;--warm-white:#111E2A;--terracotta:#E08860;--terracotta-light:#C4714A;--terracotta-pale:#1E1610;
+    --sage:#38BDF8;--sage-light:#7DD3FC;--sage-pale:#0C1E2E;--gold:#F5C842;--gold-pale:#1A1800;
+    --charcoal:#E2EEF8;--warm-gray:#7A9AB8;--light-gray:#1E3045;--card-bg:#162535;
+    --shadow:0 4px 24px rgba(0,0,0,0.4);--shadow-hover:0 8px 40px rgba(0,0,0,0.55);
   }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;transition:background 0.4s ease,color 0.4s ease;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .header{position:sticky;top:0;z-index:100;background:var(--cream);border-bottom:1px solid var(--light-gray);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);transition:var(--transition);}
+  .logo{font-family:'Lora',serif;font-size:1.5rem;font-weight:600;color:var(--terracotta);letter-spacing:-0.02em;}
+  .logo span{color:var(--charcoal);font-style:italic;}
+  .header-actions{display:flex;align-items:center;gap:12px;position:relative;}
+  .theme-toggle{background:var(--card-bg);border:1px solid var(--light-gray);border-radius:50px;padding:8px 16px;cursor:pointer;font-size:0.85rem;color:var(--warm-gray);display:flex;align-items:center;gap:6px;transition:var(--transition);font-family:'DM Sans',sans-serif;}
+  .theme-toggle:hover{background:var(--terracotta-pale);color:var(--terracotta);}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--charcoal);
-    min-height: 100vh;
-    transition: background 0.4s ease, color 0.4s ease;
-  }
 
-  /* HEADER */
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--cream);
-    border-bottom: 1px solid var(--light-gray);
-    padding: 16px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    backdrop-filter: blur(12px);
-    transition: var(--transition);
-  }
 
-  .logo {
-    font-family: 'Lora', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--terracotta);
-    letter-spacing: -0.02em;
-  }
+  .info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--light-gray);color:var(--warm-gray);font-size:0.65rem;font-weight:700;cursor:pointer;margin-left:5px;flex-shrink:0;transition:var(--transition);vertical-align:middle;user-select:none;line-height:1;}
+  .info-icon:hover{background:var(--terracotta);color:white;}
+  .tooltip-box{display:none;background:var(--charcoal);color:var(--cream);font-size:0.77rem;line-height:1.5;padding:10px 14px;border-radius:10px;margin-top:8px;animation:fadeUp 0.2s ease;max-width:280px;}
+  .tooltip-box.visible{display:block;}
 
-  .logo span {
-    color: var(--charcoal);
-    font-style: italic;
-  }
+  .main{max-width:800px;margin:0 auto;padding:48px 24px 80px;}
+  .hero{text-align:center;margin-bottom:48px;animation:fadeUp 0.6s ease both;}
+  .hero-eyebrow{display:inline-block;background:var(--terracotta-pale);color:var(--terracotta);font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;border-radius:50px;margin-bottom:20px;}
+  .hero h1{font-family:'Lora',serif;font-size:clamp(2rem,5vw,3rem);font-weight:600;line-height:1.2;color:var(--charcoal);margin-bottom:16px;letter-spacing:-0.02em;}
+  .hero h1 em{color:var(--terracotta);font-style:italic;}
+  .hero p{font-size:1.05rem;color:var(--warm-gray);max-width:500px;margin:0 auto;line-height:1.65;font-weight:300;}
+  .privacy-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;font-size:0.78rem;color:var(--warm-gray);}
+  .privacy-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;display:inline-block;}
+  .disclaimer{margin-top:16px;padding:12px 20px;background:var(--terracotta-pale);border:1px solid var(--terracotta-light);border-radius:var(--radius-sm);font-size:0.78rem;color:var(--warm-gray);line-height:1.6;text-align:left;max-width:520px;margin-left:auto;margin-right:auto;}
+  .disclaimer-footer{text-align:center;font-size:0.75rem;color:var(--warm-gray);padding:24px 16px 8px;line-height:1.6;border-top:1px solid var(--light-gray);margin-top:32px;}
 
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;margin-bottom:24px;border:1px solid var(--light-gray);transition:var(--transition);animation:fadeUp 0.6s ease both;}
+  .card-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:600;color:var(--charcoal);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+  .card-title .icon{width:32px;height:32px;background:var(--terracotta-pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
 
-  .theme-toggle {
-    background: var(--card-bg);
-    border: 1px solid var(--light-gray);
-    border-radius: 50px;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--warm-gray);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: var(--transition);
-    font-family: 'DM Sans', sans-serif;
-  }
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .field{display:flex;flex-direction:column;gap:8px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:0.82rem;font-weight:600;color:var(--warm-gray);letter-spacing:0.04em;text-transform:uppercase;}
+  .required-star{color:var(--terracotta);}
+  input[type="text"],input[type="number"],select,textarea{background:var(--cream);border:1.5px solid var(--light-gray);border-radius:var(--radius-sm);padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--charcoal);transition:var(--transition);outline:none;width:100%;}
+  input:focus,select:focus,textarea:focus{border-color:var(--terracotta);background:var(--warm-white);box-shadow:0 0 0 3px rgba(196,113,74,0.12);}
+  textarea{resize:vertical;min-height:80px;line-height:1.5;}
 
-  .theme-toggle:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+  .pill-group{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{padding:8px 16px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.85rem;color:var(--warm-gray);cursor:pointer;transition:var(--transition);user-select:none;font-family:'DM Sans',sans-serif;}
+  .pill:hover{border-color:var(--terracotta-light);color:var(--terracotta);}
+  .pill.selected{background:var(--terracotta);border-color:var(--terracotta);color:white;font-weight:500;}
 
-  /* MAIN LAYOUT */
-  .main { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+  .slider-wrapper{display:flex;flex-direction:column;gap:8px;}
+  .slider-labels{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--warm-gray);}
+  input[type="range"]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:linear-gradient(to right,var(--terracotta) 0%,var(--terracotta) 50%,var(--light-gray) 50%,var(--light-gray) 100%);outline:none;padding:0;border:none;box-shadow:none;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--terracotta);cursor:pointer;box-shadow:0 2px 8px rgba(196,113,74,0.3);}
 
-  /* HERO */
-  .hero {
-    text-align: center;
-    margin-bottom: 48px;
-    animation: fadeUp 0.6s ease both;
-  }
+  .optional-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:16px 0;border-top:1px solid var(--light-gray);margin-top:8px;color:var(--warm-gray);font-size:0.9rem;font-weight:500;transition:var(--transition);user-select:none;}
+  .optional-toggle:hover{color:var(--terracotta);}
+  .toggle-arrow{width:20px;height:20px;border-radius:50%;background:var(--terracotta-pale);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--terracotta);transition:transform 0.3s ease;}
+  .toggle-arrow.open{transform:rotate(180deg);}
+  .optional-fields{display:none;animation:fadeUp 0.3s ease;}
+  .optional-fields.visible{display:block;}
 
-  .hero-eyebrow {
-    display: inline-block;
-    background: var(--terracotta-pale);
-    color: var(--terracotta);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 16px;
-    border-radius: 50px;
-    margin-bottom: 20px;
-  }
+  .save-toggle{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--sage-pale);border-radius:var(--radius-sm);margin-top:8px;}
+  .toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
+  .toggle-switch input{display:none;}
+  .toggle-switch .slider-track{position:absolute;inset:0;background:var(--light-gray);border-radius:50px;cursor:pointer;transition:var(--transition);}
+  .toggle-switch input:checked+.slider-track{background:var(--sage);}
+  .toggle-switch .slider-track::after{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:var(--transition);}
+  .toggle-switch input:checked+.slider-track::after{transform:translateX(20px);}
+  .save-toggle-text{font-size:0.85rem;color:var(--warm-gray);line-height:1.4;}
+  .save-toggle-text strong{color:var(--charcoal);display:block;font-size:0.88rem;}
 
-  .hero h1 {
-    font-family: 'Lora', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 600;
-    line-height: 1.2;
-    color: var(--charcoal);
-    margin-bottom: 16px;
-    letter-spacing: -0.02em;
-  }
-
-  .hero h1 em {
-    color: var(--terracotta);
-    font-style: italic;
-  }
-
-  .hero p {
-    font-size: 1.05rem;
-    color: var(--warm-gray);
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.65;
-    font-weight: 300;
-  }
-
-  /* PRIVACY NOTE */
-  .privacy-note {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
-    font-size: 0.78rem;
-    color: var(--warm-gray);
-  }
-
-  .privacy-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--sage);
-    border-radius: 50%;
-    display: inline-block;
-  }
-
-  /* CARD */
-  .card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 36px;
-    margin-bottom: 24px;
-    border: 1px solid var(--light-gray);
-    transition: var(--transition);
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .card-title {
-    font-family: 'Lora', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--charcoal);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .card-title .icon {
-    width: 32px;
-    height: 32px;
-    background: var(--terracotta-pale);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-  }
-
-  /* FORM */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .form-grid.single { grid-template-columns: 1fr; }
-
-  .field { display: flex; flex-direction: column; gap: 8px; }
-  .field.full { grid-column: 1 / -1; }
-
-  label {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--warm-gray);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .required-star { color: var(--terracotta); }
-
-  input[type="text"],
-  input[type="number"],
-  select,
-  textarea {
-    background: var(--cream);
-    border: 1.5px solid var(--light-gray);
-    border-radius: var(--radius-sm);
-    padding: 14px 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--charcoal);
-    transition: var(--transition);
-    outline: none;
-    width: 100%;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--terracotta);
-    background: var(--warm-white);
-    box-shadow: 0 0 0 3px rgba(196,113,74,0.12);
-  }
-
-  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-
-  /* MULTI SELECT PILLS */
-  .pill-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .pill {
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1.5px solid var(--light-gray);
-    background: var(--cream);
-    font-size: 0.85rem;
-    color: var(--warm-gray);
-    cursor: pointer;
-    transition: var(--transition);
-    user-select: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .pill:hover { border-color: var(--terracotta-light); color: var(--terracotta); }
-
-  .pill.selected {
-    background: var(--terracotta);
-    border-color: var(--terracotta);
-    color: white;
-    font-weight: 500;
-  }
-
-  /* SLIDER */
-  .slider-wrapper { display: flex; flex-direction: column; gap: 8px; }
-  .slider-labels { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--warm-gray); }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    border-radius: 4px;
-    background: linear-gradient(to right, var(--terracotta) 0%, var(--terracotta) 50%, var(--light-gray) 50%, var(--light-gray) 100%);
-    outline: none;
-    padding: 0;
-    border: none;
-    box-shadow: none;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--terracotta);
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(196,113,74,0.3);
-  }
-
-  /* OPTIONAL SECTION */
-  .optional-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    padding: 16px 0;
-    border-top: 1px solid var(--light-gray);
-    margin-top: 8px;
-    color: var(--warm-gray);
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: var(--transition);
-    user-select: none;
-  }
-
-  .optional-toggle:hover { color: var(--terracotta); }
-
-  .toggle-arrow {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--terracotta-pale);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    color: var(--terracotta);
-    transition: transform 0.3s ease;
-  }
-
-  .toggle-arrow.open { transform: rotate(180deg); }
-
-  .optional-fields {
-    display: none;
-    animation: fadeUp 0.3s ease;
-  }
-
-  .optional-fields.visible { display: block; }
-
-  /* SAVE TOGGLE */
-  .save-toggle {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
-    background: var(--sage-pale);
-    border-radius: var(--radius-sm);
-    margin-top: 8px;
-  }
-
-  .toggle-switch {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    flex-shrink: 0;
-  }
-
-  .toggle-switch input { display: none; }
-
-  .toggle-switch .slider-track {
-    position: absolute;
-    inset: 0;
-    background: var(--light-gray);
-    border-radius: 50px;
-    cursor: pointer;
-    transition: var(--transition);
-  }
-
-  .toggle-switch input:checked + .slider-track { background: var(--sage); }
-
-  .toggle-switch .slider-track::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    left: 3px;
-    top: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: var(--transition);
-  }
-
-  .toggle-switch input:checked + .slider-track::after { transform: translateX(20px); }
-
-  .save-toggle-text { font-size: 0.85rem; color: var(--warm-gray); line-height: 1.4; }
-  .save-toggle-text strong { color: var(--charcoal); display: block; font-size: 0.88rem; }
-
-  /* BUTTONS */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px 32px;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    border: none;
-    text-decoration: none;
-  }
-
-  .btn-primary {
-    background: var(--terracotta);
-    color: white;
-    box-shadow: 0 4px 16px rgba(196,113,74,0.3);
-    width: 100%;
-    padding: 18px;
-    font-size: 1rem;
-    margin-top: 8px;
-  }
-
-  .btn-primary:hover:not(:disabled) {
-    background: #B5633D;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(196,113,74,0.4);
-  }
-
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-  .btn-secondary {
-    background: var(--card-bg);
-    color: var(--warm-gray);
-    border: 1.5px solid var(--light-gray);
-    padding: 12px 24px;
-    font-size: 0.88rem;
-  }
-
-  .btn-secondary:hover { border-color: var(--terracotta); color: var(--terracotta); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--warm-gray);
-    padding: 10px 16px;
-    font-size: 0.85rem;
-  }
-
-  .btn-ghost:hover { color: var(--terracotta); }
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 32px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:600;cursor:pointer;transition:var(--transition);border:none;text-decoration:none;}
+  .btn-primary{background:var(--terracotta);color:white;box-shadow:0 4px 16px rgba(196,113,74,0.3);width:100%;padding:18px;font-size:1rem;margin-top:8px;}
+  .btn-primary:hover:not(:disabled){background:#B5633D;transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,113,74,0.4);}
+  .btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  .btn-secondary{background:var(--card-bg);color:var(--warm-gray);border:1.5px solid var(--light-gray);padding:12px 24px;font-size:0.88rem;}
+  .btn-secondary:hover{border-color:var(--terracotta);color:var(--terracotta);}
+  .btn-ghost{background:transparent;color:var(--warm-gray);padding:10px 16px;font-size:0.85rem;}
+  .btn-ghost:hover{color:var(--terracotta);}
 
   /* LOADING */
-  .loading-state {
-    text-align: center;
-    padding: 64px 32px;
-    animation: fadeUp 0.4s ease;
-  }
-
-  .loading-orb {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--terracotta-pale);
-    margin: 0 auto 24px;
-    position: relative;
-    animation: pulse 2s ease infinite;
-  }
-
-  .loading-orb::after {
-    content: '';
-    position: absolute;
-    inset: 8px;
-    border-radius: 50%;
-    border: 3px solid var(--terracotta);
-    border-top-color: transparent;
-    animation: spin 1s linear infinite;
-  }
-
-  .loading-text {
-    font-family: 'Lora', serif;
-    font-size: 1.2rem;
-    color: var(--charcoal);
-    margin-bottom: 8px;
-    font-style: italic;
-  }
-
-  .loading-sub { font-size: 0.88rem; color: var(--warm-gray); }
+  .loading-state{text-align:center;padding:80px 32px 64px;animation:fadeUp 0.4s ease;max-width:480px;margin:0 auto;}
+  .loading-orb{width:72px;height:72px;border-radius:50%;background:var(--terracotta-pale);margin:0 auto 32px;position:relative;}
+  .loading-orb::after{content:'';position:absolute;inset:6px;border-radius:50%;border:3px solid var(--terracotta);border-top-color:transparent;animation:spin 0.9s linear infinite;}
+  .loading-text{font-family:'Lora',serif;font-size:1.3rem;color:var(--charcoal);margin-bottom:10px;font-style:italic;min-height:2em;}
+  .loading-sub{font-size:0.88rem;color:var(--warm-gray);margin-bottom:36px;}
+  .loading-progress-wrap{background:var(--light-gray);border-radius:50px;height:4px;overflow:hidden;margin-bottom:32px;}
+  .loading-progress-bar{height:100%;border-radius:50px;background:var(--terracotta);width:0%;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+  .loading-steps{display:flex;flex-direction:column;gap:10px;text-align:left;}
+  .loading-step{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:var(--radius-sm);background:var(--cream);font-size:0.85rem;color:var(--warm-gray);transition:all 0.4s ease;opacity:0.4;}
+  .loading-step.active{opacity:1;background:var(--terracotta-pale);color:var(--charcoal);}
+  .loading-step.done{opacity:1;background:var(--sage-pale);color:var(--charcoal);}
+  .step-icon{width:22px;height:22px;border-radius:50%;border:2px solid var(--light-gray);display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0;transition:all 0.3s ease;color:var(--warm-gray);}
+  .loading-step.active .step-icon{border-color:var(--terracotta);background:var(--terracotta);color:white;}
+  .loading-step.done .step-icon{border-color:var(--sage);background:var(--sage);color:white;}
+  .loading-timeout{margin-top:24px;font-size:0.78rem;color:var(--warm-gray);display:none;}
+  .loading-timeout.visible{display:block;}
 
   /* PATH CARDS */
-  .paths-header {
-    text-align: center;
-    margin-bottom: 32px;
-    animation: fadeUp 0.5s ease both;
-  }
-
-  .paths-header h2 {
-    font-family: 'Lora', serif;
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--charcoal);
-    margin-bottom: 8px;
-  }
-
-  .paths-header p { color: var(--warm-gray); font-size: 0.95rem; }
-
-  .path-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 32px;
-    margin-bottom: 20px;
-    border: 1.5px solid var(--light-gray);
-    cursor: pointer;
-    transition: var(--transition);
-    animation: fadeUp 0.5s ease both;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .path-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--terracotta);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-    transform-origin: left;
-  }
-
-  .path-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-3px);
-    border-color: var(--terracotta-light);
-  }
-
-  .path-card:hover::before { transform: scaleX(1); }
-
-  .path-card:nth-child(2) { animation-delay: 0.1s; }
-  .path-card:nth-child(3) { animation-delay: 0.2s; }
-
-  .path-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
-
-  .badge-adjacent { background: var(--sage-pale); color: var(--sage); }
-  .badge-bold { background: var(--terracotta-pale); color: var(--terracotta); }
-  .badge-moonshot { background: #EDE8F5; color: #7B5EA7; }
-
-  .path-title {
-    font-family: 'Lora', serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--charcoal);
-    margin-bottom: 10px;
-  }
-
-  .path-tagline {
-    font-size: 0.95rem;
-    color: var(--warm-gray);
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
-
-  .path-eli5 {
-    background: var(--cream);
-    border-radius: var(--radius-sm);
-    padding: 14px 18px;
-    font-size: 0.88rem;
-    color: var(--warm-gray);
-    line-height: 1.6;
-    font-style: italic;
-    margin-bottom: 20px;
-    border-left: 3px solid var(--terracotta-light);
-  }
-
-  .path-eli5 strong { font-style: normal; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta); display: block; margin-bottom: 4px; }
-
-  .path-meta {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    color: var(--warm-gray);
-  }
-
-  .effort-dots { display: flex; gap: 4px; }
-
-  .effort-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--light-gray);
-  }
-
-  .effort-dot.filled { background: var(--terracotta); }
-
-  .ai-resilience {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    padding: 4px 10px;
-    border-radius: 50px;
-    background: var(--sage-pale);
-    color: var(--sage);
-    font-weight: 500;
-  }
-
-  .path-cta {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+  .paths-header{text-align:center;margin-bottom:32px;animation:fadeUp 0.5s ease both;}
+  .paths-header h2{font-family:'Lora',serif;font-size:1.8rem;font-weight:600;color:var(--charcoal);margin-bottom:8px;}
+  .paths-header p{color:var(--warm-gray);font-size:0.95rem;}
+  .path-card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px;margin-bottom:20px;border:1.5px solid var(--light-gray);cursor:pointer;transition:var(--transition);animation:fadeUp 0.5s ease both;position:relative;overflow:hidden;}
+  .path-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--terracotta);transform:scaleX(0);transition:transform 0.3s ease;transform-origin:left;}
+  .path-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px);border-color:var(--terracotta-light);}
+  .path-card:hover::before{transform:scaleX(1);}
+  .path-card:nth-child(2){animation-delay:0.1s;}
+  .path-card:nth-child(3){animation-delay:0.2s;}
+  .path-card:nth-child(4){animation-delay:0.3s;}
+  .path-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+  .badge-levelup{background:var(--gold-pale);color:var(--gold);}
+  .badge-adjacent{background:var(--sage-pale);color:var(--sage);}
+  .badge-bold{background:var(--terracotta-pale);color:var(--terracotta);}
+  .badge-moonshot{background:#EDE8F5;color:#7B5EA7;}
+  .path-title{font-family:'Lora',serif;font-size:1.3rem;font-weight:600;color:var(--charcoal);margin-bottom:10px;}
+  .path-tagline{font-size:0.95rem;color:var(--warm-gray);line-height:1.6;margin-bottom:16px;}
+  .path-eli5{background:var(--cream);border-radius:var(--radius-sm);padding:14px 18px;font-size:0.88rem;color:var(--warm-gray);line-height:1.6;font-style:italic;margin-bottom:20px;border-left:3px solid var(--terracotta-light);}
+  .path-eli5 strong{font-style:normal;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--terracotta);display:flex;align-items:center;margin-bottom:6px;}
+  .path-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;}
+  .meta-item{display:flex;align-items:center;gap:5px;font-size:0.82rem;color:var(--warm-gray);position:relative;}
+  .effort-dots{display:flex;gap:4px;}
+  .effort-dot{width:8px;height:8px;border-radius:50%;background:var(--light-gray);}
+  .effort-dot.filled{background:var(--terracotta);}
+  .ai-resilience{display:flex;align-items:center;gap:5px;font-size:0.82rem;padding:4px 10px;border-radius:50px;font-weight:500;}
+  .path-cta{margin-top:20px;display:flex;align-items:center;justify-content:space-between;}
 
   /* DEEP DIVE */
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--warm-gray);
-    font-size: 0.88rem;
-    cursor: pointer;
-    margin-bottom: 24px;
-    transition: var(--transition);
-    background: none;
-    border: none;
-    font-family: 'DM Sans', sans-serif;
-    padding: 0;
+  .back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--warm-gray);font-size:0.88rem;cursor:pointer;margin-bottom:24px;transition:var(--transition);background:none;border:none;font-family:'DM Sans',sans-serif;padding:0;}
+  .back-btn:hover{color:var(--terracotta);}
+  .deep-header{margin-bottom:32px;animation:fadeUp 0.4s ease both;}
+  .deep-header h2{font-family:'Lora',serif;font-size:2rem;font-weight:600;color:var(--charcoal);margin-bottom:8px;}
+  .section-title{font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--terracotta);margin-bottom:14px;margin-top:28px;display:flex;align-items:center;}
+  .roadmap-steps{display:flex;flex-direction:column;gap:12px;}
+  .roadmap-step{display:flex;gap:16px;align-items:flex-start;padding:16px;background:var(--cream);border-radius:var(--radius-sm);}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--terracotta);color:white;font-size:0.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step-content{flex:1;}
+  .step-title{font-weight:600;font-size:0.92rem;margin-bottom:4px;}
+  .step-detail{font-size:0.85rem;color:var(--warm-gray);line-height:1.5;}
+  .skill-gaps{display:flex;flex-wrap:wrap;gap:8px;}
+  .gap-pill{padding:8px 16px;background:var(--terracotta-pale);color:var(--terracotta);border-radius:50px;font-size:0.85rem;font-weight:500;}
+  .ai-proof-box{background:var(--sage-pale);border-radius:var(--radius-sm);padding:20px;border-left:3px solid var(--sage);}
+  .ai-proof-box p{font-size:0.9rem;color:var(--charcoal);line-height:1.65;}
+
+  .export-bar{position:sticky;bottom:24px;background:var(--card-bg);border:1px solid var(--light-gray);border-radius:50px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-hover);margin-top:32px;animation:slideUp 0.4s ease both;gap:12px;flex-wrap:wrap;}
+  .export-label{font-size:0.82rem;color:var(--warm-gray);font-weight:500;white-space:nowrap;}
+  .export-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+  .export-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.82rem;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;}
+  .export-btn:hover{border-color:var(--terracotta);color:var(--terracotta);background:var(--terracotta-pale);}
+
+  .chat-section{margin-top:32px;animation:fadeUp 0.5s ease both;}
+  .chat-title{font-family:'Lora',serif;font-size:1.1rem;margin-bottom:16px;color:var(--charcoal);}
+  .chat-messages{display:flex;flex-direction:column;gap:16px;margin-bottom:16px;max-height:400px;overflow-y:auto;padding:4px;}
+  .message{display:flex;gap:12px;animation:fadeUp 0.3s ease both;}
+  .message.user{flex-direction:row-reverse;}
+  .message-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;font-weight:600;}
+  .message.assistant .message-avatar{background:var(--terracotta-pale);color:var(--terracotta);}
+  .message.user .message-avatar{background:var(--sage-pale);color:var(--sage);}
+  .message-bubble{max-width:80%;padding:14px 18px;border-radius:18px;font-size:0.92rem;line-height:1.6;}
+  .message.assistant .message-bubble{background:var(--card-bg);border:1px solid var(--light-gray);border-bottom-left-radius:4px;color:var(--charcoal);}
+  .message.user .message-bubble{background:var(--terracotta);color:white;border-bottom-right-radius:4px;}
+  .chat-input-row{display:flex;gap:10px;align-items:flex-end;}
+  .chat-input{flex:1;background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:16px;padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--charcoal);resize:none;outline:none;transition:var(--transition);min-height:52px;max-height:120px;}
+  .chat-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(196,113,74,0.12);}
+  .chat-send{width:52px;height:52px;border-radius:50%;background:var(--terracotta);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0;}
+  .chat-send:hover:not(:disabled){background:#B5633D;transform:scale(1.05);}
+  .chat-send:disabled{opacity:0.5;cursor:not-allowed;}
+  .explore-other{text-align:center;padding:24px;border-top:1px solid var(--light-gray);margin-top:16px;}
+
+  .clear-data-link{color:var(--warm-gray);font-size:0.78rem;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif;transition:var(--transition);}
+  .clear-data-link:hover{color:var(--terracotta);}
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:12px 24px;border-radius:50px;font-size:0.88rem;font-weight:500;z-index:1000;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .hidden{display:none!important;}
+  .text-center{text-align:center;}
+  .mt-16{margin-top:16px;}
+  .mt-24{margin-top:24px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media(max-width:600px){
+    .header{padding:14px 20px;}
+    .main{padding:32px 16px 80px;}
+    .card{padding:24px 20px;}
+    .form-grid{grid-template-columns:1fr;}
+    .field.full{grid-column:1;}
+    .export-bar{bottom:12px;border-radius:var(--radius-sm);}
+    .cost-badge{display:none!important;}
   }
-
-  .back-btn:hover { color: var(--terracotta); }
-
-  .deep-header {
-    margin-bottom: 32px;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .deep-header h2 {
-    font-family: 'Lora', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--charcoal);
-    margin-bottom: 8px;
-  }
-
-  .section-title {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    margin-bottom: 14px;
-    margin-top: 28px;
-  }
-
-  .roadmap-steps { display: flex; flex-direction: column; gap: 12px; }
-
-  .roadmap-step {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    padding: 16px;
-    background: var(--cream);
-    border-radius: var(--radius-sm);
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .step-num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--terracotta);
-    color: white;
-    font-size: 0.78rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .step-content { flex: 1; }
-  .step-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 4px; }
-  .step-detail { font-size: 0.85rem; color: var(--warm-gray); line-height: 1.5; }
-
-  .skill-gaps { display: flex; flex-wrap: wrap; gap: 8px; }
-
-  .gap-pill {
-    padding: 8px 16px;
-    background: var(--terracotta-pale);
-    color: var(--terracotta);
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  .ai-proof-box {
-    background: var(--sage-pale);
-    border-radius: var(--radius-sm);
-    padding: 20px;
-    border-left: 3px solid var(--sage);
-  }
-
-  .ai-proof-box p { font-size: 0.9rem; color: var(--charcoal); line-height: 1.65; }
-
-  /* EXPORT BAR */
-  .export-bar {
-    position: sticky;
-    bottom: 24px;
-    background: var(--card-bg);
-    border: 1px solid var(--light-gray);
-    border-radius: 50px;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: var(--shadow-hover);
-    margin-top: 32px;
-    animation: slideUp 0.4s ease both;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .export-label { font-size: 0.82rem; color: var(--warm-gray); font-weight: 500; white-space: nowrap; }
-
-  .export-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .export-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1.5px solid var(--light-gray);
-    background: var(--cream);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--warm-gray);
-    cursor: pointer;
-    transition: var(--transition);
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .export-btn:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-pale); }
-
-  /* CHAT */
-  .chat-section { margin-top: 32px; animation: fadeUp 0.5s ease both; }
-
-  .chat-title {
-    font-family: 'Lora', serif;
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-    color: var(--charcoal);
-  }
-
-  .chat-messages {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 16px;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 4px;
-  }
-
-  .message {
-    display: flex;
-    gap: 12px;
-    animation: fadeUp 0.3s ease both;
-  }
-
-  .message.user { flex-direction: row-reverse; }
-
-  .message-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-    font-weight: 600;
-  }
-
-  .message.assistant .message-avatar { background: var(--terracotta-pale); color: var(--terracotta); }
-  .message.user .message-avatar { background: var(--sage-pale); color: var(--sage); }
-
-  .message-bubble {
-    max-width: 80%;
-    padding: 14px 18px;
-    border-radius: 18px;
-    font-size: 0.92rem;
-    line-height: 1.6;
-  }
-
-  .message.assistant .message-bubble {
-    background: var(--card-bg);
-    border: 1px solid var(--light-gray);
-    border-bottom-left-radius: 4px;
-    color: var(--charcoal);
-  }
-
-  .message.user .message-bubble {
-    background: var(--terracotta);
-    color: white;
-    border-bottom-right-radius: 4px;
-  }
-
-  .chat-input-row {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-  }
-
-  .chat-input {
-    flex: 1;
-    background: var(--card-bg);
-    border: 1.5px solid var(--light-gray);
-    border-radius: 16px;
-    padding: 14px 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    color: var(--charcoal);
-    resize: none;
-    outline: none;
-    transition: var(--transition);
-    min-height: 52px;
-    max-height: 120px;
-  }
-
-  .chat-input:focus { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(196,113,74,0.12); }
-
-  .chat-send {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--terracotta);
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    flex-shrink: 0;
-  }
-
-  .chat-send:hover:not(:disabled) { background: #B5633D; transform: scale(1.05); }
-  .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* EXPLORE OTHER */
-  .explore-other {
-    text-align: center;
-    padding: 24px;
-    border-top: 1px solid var(--light-gray);
-    margin-top: 16px;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.9; }
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* RESPONSIVE */
-  @media (max-width: 600px) {
-    .header { padding: 14px 20px; }
-    .main { padding: 32px 16px 80px; }
-    .card { padding: 24px 20px; }
-    .form-grid { grid-template-columns: 1fr; }
-    .field.full { grid-column: 1; }
-    .export-bar { bottom: 12px; border-radius: var(--radius-sm); }
-  }
-
-  /* UTILITY */
-  .hidden { display: none !important; }
-  .text-center { text-align: center; }
-  .mt-16 { margin-top: 16px; }
-  .mt-24 { margin-top: 24px; }
-  .divider { border: none; border-top: 1px solid var(--light-gray); margin: 24px 0; }
-
-  .disclaimer {
-    margin-top: 16px;
-    padding: 12px 20px;
-    background: var(--terracotta-pale);
-    border: 1px solid var(--terracotta-light);
-    border-radius: var(--radius-sm);
-    font-size: 0.78rem;
-    color: var(--warm-gray);
-    line-height: 1.6;
-    text-align: left;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .disclaimer-footer {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--warm-gray);
-    padding: 24px 16px 8px;
-    line-height: 1.6;
-    border-top: 1px solid var(--light-gray);
-    margin-top: 32px;
-  }
-
-  .clear-data-link {
-    color: var(--warm-gray);
-    font-size: 0.78rem;
-    cursor: pointer;
-    text-decoration: underline;
-    background: none;
-    border: none;
-    font-family: 'DM Sans', sans-serif;
-    transition: var(--transition);
-  }
-
-  .clear-data-link:hover { color: var(--terracotta); }
-
-  .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--charcoal);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    z-index: 1000;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-    white-space: nowrap;
-  }
-
-  .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -968,55 +214,33 @@
 <header class="header">
   <div class="logo">Piv<span>it</span></div>
   <div class="header-actions">
+
     <button class="clear-data-link" onclick="clearData()" id="clearBtn" style="display:none">Clear my data</button>
     <button class="theme-toggle" onclick="toggleTheme()">
-      <span id="themeIcon">🌙</span>
-      <span id="themeLabel">Dark</span>
+      <span id="themeIcon">🌙</span><span id="themeLabel">Dark</span>
     </button>
   </div>
 </header>
 
 <div class="main">
 
-  <!-- SCREEN: FORM -->
+  <!-- FORM -->
   <div id="screen-form">
     <div class="hero">
       <div class="hero-eyebrow">Career Intelligence</div>
       <h1>Where could your career <em>go next?</em></h1>
       <p>Tell Pivit where you are. We'll map honest, thoughtful paths to where you could be.</p>
-      <div class="privacy-note">
-        <span class="privacy-dot"></span>
-        Your data never leaves your device or gets stored on our servers. Ever.
-      </div>
-      <div class="disclaimer">
-        ⚠️ Pivit is AI-generated and intended for educational and exploratory purposes only. It is not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Always consult a real human expert before making major career decisions.
-      </div>
+      <div class="privacy-note"><span class="privacy-dot"></span>Your data never leaves your device or gets stored on our servers. Ever.</div>
+      <div class="disclaimer">⚠️ Pivit is AI-generated and intended for educational and exploratory purposes only. It is not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Always consult a real human expert before making major career decisions.</div>
     </div>
 
-    <!-- REQUIRED FIELDS -->
     <div class="card" style="animation-delay:0.1s">
-      <div class="card-title">
-        <div class="icon">✦</div>
-        The essentials
-      </div>
-
+      <div class="card-title"><div class="icon">✦</div>The essentials</div>
       <div class="form-grid">
-        <div class="field">
-          <label>Age <span class="required-star">*</span></label>
-          <input type="number" id="age" placeholder="e.g. 32" min="18" max="75">
-        </div>
-        <div class="field">
-          <label>Current Role / Title <span class="required-star">*</span></label>
-          <input type="text" id="role" placeholder="e.g. Senior Product Manager">
-        </div>
-        <div class="field">
-          <label>Industry <span class="required-star">*</span></label>
-          <input type="text" id="industry" placeholder="e.g. Consumer Tech, Healthcare">
-        </div>
-        <div class="field">
-          <label>Top Skills <span class="required-star">*</span></label>
-          <input type="text" id="skills" placeholder="e.g. Product strategy, data analysis, stakeholder mgmt">
-        </div>
+        <div class="field"><label>Age <span class="required-star">*</span></label><input type="number" id="age" placeholder="e.g. 32" min="18" max="75"></div>
+        <div class="field"><label>Current Role / Title <span class="required-star">*</span></label><input type="text" id="role" placeholder="e.g. Senior Product Manager"></div>
+        <div class="field"><label>Industry <span class="required-star">*</span></label><input type="text" id="industry" placeholder="e.g. Consumer Tech, Healthcare"></div>
+        <div class="field"><label>Top Skills <span class="required-star">*</span></label><input type="text" id="skills" placeholder="e.g. Product strategy, data analysis, stakeholder mgmt"></div>
         <div class="field full">
           <label>I want more of this in my next chapter <span class="required-star">*</span></label>
           <div class="pill-group" id="goals-pills">
@@ -1030,42 +254,19 @@
           </div>
         </div>
       </div>
-
-      <!-- OPTIONAL TOGGLE -->
       <div class="optional-toggle" onclick="toggleOptional()">
         <div class="toggle-arrow" id="optionalArrow">▼</div>
         Help Pivit understand you better (optional but worth it)
       </div>
-
       <div class="optional-fields" id="optionalFields">
         <div class="form-grid mt-16">
-          <div class="field">
-            <label>Years of Experience</label>
-            <input type="number" id="experience" placeholder="e.g. 8" min="0" max="50">
+          <div class="field"><label>Years of Experience</label><input type="number" id="experience" placeholder="e.g. 8" min="0" max="50"></div>
+          <div class="field"><label>Education</label><input type="text" id="education" placeholder="e.g. BS Computer Science, MBA"></div>
+          <div class="field"><label>Target Timeline</label>
+            <select id="timeline"><option value="">— Select —</option><option value="1 year">Within 1 year</option><option value="2-3 years">2–3 years</option><option value="5+ years">5+ years</option><option value="no rush">No rush, just exploring</option></select>
           </div>
-          <div class="field">
-            <label>Education</label>
-            <input type="text" id="education" placeholder="e.g. BS Computer Science, MBA">
-          </div>
-          <div class="field">
-            <label>Target Timeline</label>
-            <select id="timeline">
-              <option value="">— Select —</option>
-              <option value="1 year">Within 1 year</option>
-              <option value="2-3 years">2–3 years</option>
-              <option value="5+ years">5+ years</option>
-              <option value="no rush">No rush, just exploring</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Location Flexibility</label>
-            <select id="location">
-              <option value="">— Select —</option>
-              <option value="remote only">Remote only</option>
-              <option value="hybrid">Open to hybrid</option>
-              <option value="open to relocate">Open to relocate</option>
-              <option value="local only">Local only</option>
-            </select>
+          <div class="field"><label>Location Flexibility</label>
+            <select id="location"><option value="">— Select —</option><option value="remote only">Remote only</option><option value="hybrid">Open to hybrid</option><option value="open to relocate">Open to relocate</option><option value="local only">Local only</option></select>
           </div>
           <div class="field full">
             <label>I want less of this in my next role</label>
@@ -1082,69 +283,57 @@
             <label>Risk Tolerance</label>
             <div class="slider-wrapper">
               <input type="range" id="risk" min="1" max="5" value="3" oninput="updateRiskSlider(this)">
-              <div class="slider-labels">
-                <span>🏠 Play it safe</span>
-                <span>🚀 Ready to leap</span>
-              </div>
+              <div class="slider-labels"><span>🏠 Play it safe</span><span>🚀 Ready to leap</span></div>
             </div>
           </div>
-          <div class="field full">
-            <label>Anything else Pivit should know?</label>
-            <textarea id="context" placeholder="e.g. I have a family to support, I'm burned out, I want to start something of my own someday..."></textarea>
-          </div>
+          <div class="field full"><label>Anything else Pivit should know?</label><textarea id="context" placeholder="e.g. I have a family to support, I'm burned out, I want to start something of my own someday..."></textarea></div>
         </div>
       </div>
     </div>
 
-    <!-- SAVE TOGGLE -->
-    <div class="card" style="animation-delay:0.2s; padding: 24px 32px;">
+    <div class="card" style="animation-delay:0.2s;padding:24px 32px;">
       <div class="save-toggle">
-        <label class="toggle-switch">
-          <input type="checkbox" id="saveProfile" onchange="handleSaveToggle(this)">
-          <div class="slider-track"></div>
-        </label>
-        <div class="save-toggle-text">
-          <strong>Remember my profile</strong>
-          Saved only on this device, never on our servers.
-        </div>
+        <label class="toggle-switch"><input type="checkbox" id="saveProfile" onchange="handleSaveToggle(this)"><div class="slider-track"></div></label>
+        <div class="save-toggle-text"><strong>Remember my profile</strong>Saved only on this device, never on our servers.</div>
       </div>
     </div>
 
-    <button class="btn btn-primary" onclick="generatePaths()" id="generateBtn">
-      Map my possibilities →
-    </button>
+    <button class="btn btn-primary" onclick="generatePaths()">Map my possibilities →</button>
   </div>
 
-  <!-- SCREEN: LOADING -->
+  <!-- LOADING -->
   <div id="screen-loading" class="hidden">
     <div class="loading-state">
       <div class="loading-orb"></div>
       <div class="loading-text" id="loadingText">Mapping your possibilities...</div>
-      <div class="loading-sub">Pivit is thinking deeply about your career</div>
+      <div class="loading-sub" id="loadingSub">This takes about 10–15 seconds</div>
+      <div class="loading-progress-wrap"><div class="loading-progress-bar" id="loadingProgressBar"></div></div>
+      <div class="loading-steps">
+        <div class="loading-step" id="lstep-1"><div class="step-icon" id="lstep-1-icon">1</div><span id="lstep-1-text">Reading your career profile</span></div>
+        <div class="loading-step" id="lstep-2"><div class="step-icon" id="lstep-2-icon">2</div><span id="lstep-2-text">Analyzing your skills and goals</span></div>
+        <div class="loading-step" id="lstep-3"><div class="step-icon" id="lstep-3-icon">3</div><span id="lstep-3-text">Mapping your paths</span></div>
+        <div class="loading-step" id="lstep-4"><div class="step-icon" id="lstep-4-icon">4</div><span id="lstep-4-text">Assessing effort and timelines</span></div>
+        <div class="loading-step" id="lstep-5"><div class="step-icon" id="lstep-5-icon">5</div><span id="lstep-5-text">Scoring AI resilience</span></div>
+      </div>
+      <div class="loading-timeout" id="loadingTimeout">Taking longer than usual... still working on it.</div>
     </div>
   </div>
 
-  <!-- SCREEN: PATHS -->
+  <!-- PATHS -->
   <div id="screen-paths" class="hidden">
     <div class="paths-header">
       <h2>Your career possibilities</h2>
-      <p>Three honest paths, mapped just for you. Tap one to explore it deeply.</p>
+      <p>Four paths mapped for you — tap any to explore it in depth.</p>
     </div>
     <div id="path-cards-container"></div>
-    <div class="text-center mt-24">
-      <button class="btn btn-secondary" onclick="showScreen('form')">← Start over</button>
-    </div>
-    <div class="disclaimer-footer">
-      ⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional. Consult a real expert before making major career decisions.
-    </div>
+    <div class="text-center mt-24"><button class="btn btn-secondary" onclick="showScreen('form')">← Start over</button></div>
+    <div class="disclaimer-footer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before making major career decisions.</div>
   </div>
 
-  <!-- SCREEN: DEEP DIVE -->
+  <!-- DEEP DIVE -->
   <div id="screen-deep" class="hidden">
     <button class="back-btn" onclick="showScreen('paths')">← Back to all paths</button>
     <div id="deep-content"></div>
-
-    <!-- EXPORT BAR -->
     <div class="export-bar">
       <span class="export-label">Save your report</span>
       <div class="export-buttons">
@@ -1153,8 +342,6 @@
         <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
       </div>
     </div>
-
-    <!-- CHAT -->
     <div class="chat-section card">
       <div class="chat-title">Ask Pivit anything about this path</div>
       <div class="chat-messages" id="chatMessages"></div>
@@ -1164,300 +351,256 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-
-      <div class="explore-other">
-        <button class="btn btn-ghost" onclick="showScreen('paths')">Explore a different path →</button>
-      </div>
+      <div class="explore-other"><button class="btn btn-ghost" onclick="showScreen('paths')">Explore a different path →</button></div>
     </div>
-    <div class="disclaimer-footer">
-      ⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional. Consult a real expert before making major career decisions.
-    </div>
+    <div class="disclaimer-footer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before making major career decisions.</div>
   </div>
 
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────────────────
-const state = {
-  profile: {},
-  paths: [],
-  selectedPath: null,
-  deepDive: null,
-  chatHistory: [],
-  theme: 'light'
-};
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const state={profile:{},paths:[],selectedPath:null,deepDive:null,chatHistory:[],theme:'light'};
+const selectedPills={goals:[],avoids:[]};
 
-const selectedPills = { goals: [], avoids: [] };
-
-// ─── THEME ───────────────────────────────────────────────────────────────────
-function toggleTheme() {
-  state.theme = state.theme === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', state.theme);
-  document.getElementById('themeIcon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
-  document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Light' : 'Dark';
-  if (localStorage.getItem('pivit_save') === 'true') {
-    localStorage.setItem('pivit_theme', state.theme);
-  }
+// ─── THEME ────────────────────────────────────────────────────────────────────
+function toggleTheme(){
+  state.theme=state.theme==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',state.theme);
+  document.getElementById('themeIcon').textContent=state.theme==='dark'?'☀️':'🌙';
+  document.getElementById('themeLabel').textContent=state.theme==='dark'?'Light':'Dark';
+  if(localStorage.getItem('pivit_save')==='true')localStorage.setItem('pivit_theme',state.theme);
 }
 
-// ─── PILLS ───────────────────────────────────────────────────────────────────
-function togglePill(el, group) {
+// ─── TOOLTIPS ─────────────────────────────────────────────────────────────────
+function toggleTooltip(id){
+  const el=document.getElementById(id);
+  const wasVisible=el.classList.contains('visible');
+  document.querySelectorAll('.tooltip-box').forEach(t=>t.classList.remove('visible'));
+  if(!wasVisible)el.classList.add('visible');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.classList.contains('info-icon'))
+    document.querySelectorAll('.tooltip-box').forEach(t=>t.classList.remove('visible'));
+});
+
+// ─── FORM ─────────────────────────────────────────────────────────────────────
+function togglePill(el,group){
   el.classList.toggle('selected');
-  const val = el.dataset.value;
-  const arr = selectedPills[group];
-  const idx = arr.indexOf(val);
-  if (idx === -1) arr.push(val);
-  else arr.splice(idx, 1);
+  const val=el.dataset.value,arr=selectedPills[group],idx=arr.indexOf(val);
+  if(idx===-1)arr.push(val);else arr.splice(idx,1);
+}
+function toggleOptional(){
+  document.getElementById('optionalFields').classList.toggle('visible');
+  document.getElementById('optionalArrow').classList.toggle('open');
+}
+function updateRiskSlider(el){
+  const pct=((el.value-el.min)/(el.max-el.min))*100;
+  el.style.background=`linear-gradient(to right,var(--terracotta) 0%,var(--terracotta) ${pct}%,var(--light-gray) ${pct}%,var(--light-gray) 100%)`;
 }
 
-// ─── OPTIONAL FIELDS ─────────────────────────────────────────────────────────
-function toggleOptional() {
-  const fields = document.getElementById('optionalFields');
-  const arrow = document.getElementById('optionalArrow');
-  fields.classList.toggle('visible');
-  arrow.classList.toggle('open');
+// ─── SAVE/LOAD ────────────────────────────────────────────────────────────────
+function handleSaveToggle(cb){
+  if(cb.checked){saveProfile();document.getElementById('clearBtn').style.display='inline';}
+  else{['pivit_profile','pivit_save'].forEach(k=>localStorage.removeItem(k));document.getElementById('clearBtn').style.display='none';}
 }
-
-// ─── SLIDER ──────────────────────────────────────────────────────────────────
-function updateRiskSlider(el) {
-  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
-  el.style.background = `linear-gradient(to right, var(--terracotta) 0%, var(--terracotta) ${pct}%, var(--light-gray) ${pct}%, var(--light-gray) 100%)`;
+function saveProfile(){
+  localStorage.setItem('pivit_profile',JSON.stringify({...collectProfile(),pills:selectedPills,theme:state.theme}));
+  localStorage.setItem('pivit_save','true');
 }
-
-// ─── SAVE / LOAD ──────────────────────────────────────────────────────────────
-function handleSaveToggle(checkbox) {
-  if (checkbox.checked) {
-    saveProfile();
-    document.getElementById('clearBtn').style.display = 'inline';
-  } else {
-    localStorage.removeItem('pivit_profile');
-    localStorage.removeItem('pivit_save');
-    document.getElementById('clearBtn').style.display = 'none';
-  }
-}
-
-function saveProfile() {
-  const profile = collectProfile();
-  localStorage.setItem('pivit_profile', JSON.stringify({ ...profile, pills: selectedPills, theme: state.theme }));
-  localStorage.setItem('pivit_save', 'true');
-}
-
-function loadProfile() {
-  const saved = localStorage.getItem('pivit_profile');
-  const saveEnabled = localStorage.getItem('pivit_save') === 'true';
-  if (!saved || !saveEnabled) return;
-
-  const data = JSON.parse(saved);
-  document.getElementById('saveProfile').checked = true;
-  document.getElementById('clearBtn').style.display = 'inline';
-
-  const fields = ['age','role','industry','skills','experience','education','timeline','location','context'];
-  fields.forEach(f => { if (data[f] && document.getElementById(f)) document.getElementById(f).value = data[f]; });
-
-  if (data.risk) {
-    document.getElementById('risk').value = data.risk;
-    updateRiskSlider(document.getElementById('risk'));
-  }
-
-  if (data.pills) {
-    ['goals','avoids'].forEach(group => {
-      (data.pills[group] || []).forEach(val => {
-        const pill = document.querySelector(`#${group}-pills .pill[data-value="${val}"]`);
-        if (pill) { pill.classList.add('selected'); selectedPills[group].push(val); }
+function loadProfile(){
+  const saved=localStorage.getItem('pivit_profile');
+  if(!saved||localStorage.getItem('pivit_save')!=='true')return;
+  const data=JSON.parse(saved);
+  document.getElementById('saveProfile').checked=true;
+  document.getElementById('clearBtn').style.display='inline';
+  ['age','role','industry','skills','experience','education','timeline','location','context'].forEach(f=>{
+    if(data[f]&&document.getElementById(f))document.getElementById(f).value=data[f];
+  });
+  if(data.risk){document.getElementById('risk').value=data.risk;updateRiskSlider(document.getElementById('risk'));}
+  if(data.pills){
+    ['goals','avoids'].forEach(group=>{
+      (data.pills[group]||[]).forEach(val=>{
+        const p=document.querySelector(`#${group}-pills .pill[data-value="${val}"]`);
+        if(p){p.classList.add('selected');selectedPills[group].push(val);}
       });
     });
   }
-
-  if (data.theme) {
-    state.theme = data.theme;
-    document.documentElement.setAttribute('data-theme', state.theme);
-    document.getElementById('themeIcon').textContent = state.theme === 'dark' ? '☀️' : '🌙';
-    document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Light' : 'Dark';
+  if(data.theme){
+    state.theme=data.theme;
+    document.documentElement.setAttribute('data-theme',state.theme);
+    document.getElementById('themeIcon').textContent=state.theme==='dark'?'☀️':'🌙';
+    document.getElementById('themeLabel').textContent=state.theme==='dark'?'Light':'Dark';
   }
 }
-
-function clearData() {
-  if (!confirm('Clear all your saved profile data?')) return;
-  localStorage.removeItem('pivit_profile');
-  localStorage.removeItem('pivit_save');
-  localStorage.removeItem('pivit_theme');
-  document.getElementById('saveProfile').checked = false;
-  document.getElementById('clearBtn').style.display = 'none';
+function clearData(){
+  if(!confirm('Clear all your saved profile data?'))return;
+  ['pivit_profile','pivit_save','pivit_theme'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('saveProfile').checked=false;
+  document.getElementById('clearBtn').style.display='none';
   showToast('Profile data cleared');
 }
-
-// ─── COLLECT PROFILE ─────────────────────────────────────────────────────────
-function collectProfile() {
-  return {
-    age: document.getElementById('age').value,
-    role: document.getElementById('role').value,
-    industry: document.getElementById('industry').value,
-    skills: document.getElementById('skills').value,
-    goals: selectedPills.goals,
-    experience: document.getElementById('experience').value,
-    education: document.getElementById('education').value,
-    timeline: document.getElementById('timeline').value,
-    location: document.getElementById('location').value,
-    avoids: selectedPills.avoids,
-    risk: document.getElementById('risk').value,
-    context: document.getElementById('context').value
+function collectProfile(){
+  return{
+    age:document.getElementById('age').value,role:document.getElementById('role').value,
+    industry:document.getElementById('industry').value,skills:document.getElementById('skills').value,
+    goals:selectedPills.goals,experience:document.getElementById('experience').value,
+    education:document.getElementById('education').value,timeline:document.getElementById('timeline').value,
+    location:document.getElementById('location').value,avoids:selectedPills.avoids,
+    risk:document.getElementById('risk').value,context:document.getElementById('context').value
   };
 }
-
-function validateProfile(p) {
-  if (!p.age) return 'Please enter your age';
-  if (!p.role) return 'Please enter your current role';
-  if (!p.industry) return 'Please enter your industry';
-  if (!p.skills) return 'Please enter your top skills';
-  if (!p.goals.length) return 'Please select at least one goal';
+function validateProfile(p){
+  if(!p.age)return'Please enter your age';
+  if(!p.role)return'Please enter your current role';
+  if(!p.industry)return'Please enter your industry';
+  if(!p.skills)return'Please enter your top skills';
+  if(!p.goals.length)return'Please select at least one goal';
   return null;
 }
 
-// ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
-function showScreen(name) {
-  ['form','loading','paths','deep'].forEach(s => {
-    document.getElementById(`screen-${s}`).classList.toggle('hidden', s !== name);
+// ─── LOADING PROGRESS ─────────────────────────────────────────────────────────
+let loadingTimers=[],loadingTimeoutTimer=null;
+const S1=[{id:1,text:'Reading your career profile'},{id:2,text:'Analyzing your skills and goals'},{id:3,text:'Mapping your paths'},{id:4,text:'Assessing effort and timelines'},{id:5,text:'Scoring AI resilience'}];
+const S2=[{id:1,text:'Reviewing your chosen path'},{id:2,text:'Building your roadmap'},{id:3,text:'Identifying skill gaps'},{id:4,text:'Sketching a day in the life'},{id:5,text:'Writing your AI-proofing strategy'}];
+
+function startLoadingProgress(steps,title){
+  document.getElementById('loadingText').textContent=title;
+  document.getElementById('loadingSub').textContent='This takes about 10–15 seconds';
+  document.getElementById('loadingTimeout').classList.remove('visible');
+  document.getElementById('loadingProgressBar').style.width='0%';
+  steps.forEach(s=>{
+    const el=document.getElementById(`lstep-${s.id}`),ic=document.getElementById(`lstep-${s.id}-icon`),tx=document.getElementById(`lstep-${s.id}-text`);
+    if(el)el.className='loading-step';if(ic)ic.textContent=s.id;if(tx)tx.textContent=s.text;
   });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  function act(idx){
+    if(idx>0){const p=document.getElementById(`lstep-${idx}`),pi=document.getElementById(`lstep-${idx}-icon`);if(p)p.className='loading-step done';if(pi)pi.textContent='✓';}
+    if(idx<steps.length){
+      const el=document.getElementById(`lstep-${idx+1}`);if(el)el.className='loading-step active';
+      document.getElementById('loadingProgressBar').style.width=Math.round(((idx+1)/steps.length)*85)+'%';
+    }
+  }
+  act(0);
+  loadingTimers=[1800,3200,5000,7500,9500].map((d,i)=>setTimeout(()=>act(i+1),d));
+  loadingTimeoutTimer=setTimeout(()=>{
+    document.getElementById('loadingTimeout').classList.add('visible');
+    document.getElementById('loadingSub').textContent='Almost there...';
+  },18000);
+}
+function finishLoadingProgress(){
+  document.getElementById('loadingProgressBar').style.width='100%';
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById(`lstep-${i}`),ic=document.getElementById(`lstep-${i}-icon`);
+    if(el)el.className='loading-step done';if(ic)ic.textContent='✓';
+  }
+  loadingTimers.forEach(t=>clearTimeout(t));
+  if(loadingTimeoutTimer)clearTimeout(loadingTimeoutTimer);
 }
 
-// ─── API CALL (proxied via /api/chat — key lives server-side) ─────────────────
-async function callClaude(messages, systemPrompt) {
-  const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages, systemPrompt })
-  });
+function showScreen(name){
+  ['form','loading','paths','deep'].forEach(s=>document.getElementById(`screen-${s}`).classList.toggle('hidden',s!==name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  if (!res.ok) {
-    let errMsg = `HTTP ${res.status}`;
-    try {
-      const b = await res.json();
-      errMsg += ': ' + (b.error || JSON.stringify(b));
-    } catch {}
-    throw new Error(errMsg);
-  }
-
-  const data = await res.json();
-  if (!data.content) throw new Error('Empty response from API');
+// ─── API ──────────────────────────────────────────────────────────────────────
+async function callClaude(messages,systemPrompt){
+  const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,systemPrompt})});
+  if(!res.ok){let e=`HTTP ${res.status}`;try{const b=await res.json();e+=': '+(b.error||JSON.stringify(b));}catch{}throw new Error(e);}
+  const data=await res.json();
+  if(!data.content)throw new Error('Empty response from API');
   return data.content;
 }
-
-// ─── ROBUST JSON PARSE ────────────────────────────────────────────────────────
-function extractJSON(raw) {
-  // Strip markdown fences
-  let cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-  // Find the first { and last } to isolate the JSON object
-  const start = cleaned.indexOf('{');
-  const end = cleaned.lastIndexOf('}');
-  if (start === -1 || end === -1) throw new Error('No JSON object found in response');
-  cleaned = cleaned.slice(start, end + 1);
-  return JSON.parse(cleaned);
+function extractJSON(raw){
+  let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+  const s=c.indexOf('{'),e=c.lastIndexOf('}');
+  if(s===-1||e===-1)throw new Error('No JSON in response');
+  return JSON.parse(c.slice(s,e+1));
 }
 
-// ─── STAGE 1: GENERATE PATHS ─────────────────────────────────────────────────
-async function generatePaths() {
-  const profile = collectProfile();
-  const error = validateProfile(profile);
-  if (error) { showToast(error); return; }
-
-  state.profile = profile;
-  if (document.getElementById('saveProfile').checked) saveProfile();
-
+// ─── STAGE 1 — lean card data only ────────────────────────────────────────────
+async function generatePaths(){
+  const profile=collectProfile(),err=validateProfile(profile);
+  if(err){showToast(err);return;}
+  state.profile=profile;
+  if(document.getElementById('saveProfile').checked)saveProfile();
   showScreen('loading');
+  startLoadingProgress(S1,'Mapping your possibilities...');
 
-  const systemPrompt = `You are Pivit, a warm, honest, and deeply knowledgeable career advisor. You are not a cheerleader — you give realistic, specific, actionable guidance. You care deeply about the person. Never make guarantees about outcomes. Be honest about long-shot paths. Be age-aware but never ageist. Do not give financial advice. Do not name specific companies or schools.
+  const sys=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
 
-You must respond with ONLY valid JSON — no preamble, no markdown, no backticks. Return this exact structure:
-{
-  "paths": [
-    {
-      "pathTitle": "string",
-      "pathType": "Adjacent" | "Bold" | "Moonshot",
-      "tagline": "string — one punchy sentence about why this fits them",
-      "effortScore": 1-5,
-      "timeline": "string e.g. ~18 months",
-      "eli5": "string — 2-3 sentences, zero jargon, explain to a curious non-professional friend",
-      "whyItFits": "string — specific to their background",
-      "keySkillGaps": ["string", ...],
-      "roadmapSteps": [
-        { "title": "string", "detail": "string", "timeEstimate": "string" }
-      ],
-      "aiResilienceScore": 1-5,
-      "aiResilienceNote": "string — what makes this path durable or vulnerable to AI",
-      "aiProofingAdvice": "string — 2-3 concrete moves to make this path more AI-proof",
-      "dayInTheLife": "string — a vivid 2-sentence sketch of a typical day in this role",
-      "risks": "string — honest risks and how to navigate them"
-    }
-  ]
-}`;
+Respond with ONLY valid JSON, no markdown:
+{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent"|"Bold"|"Moonshot","tagline":"string — one punchy sentence","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string — specific to their background","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
 
-  const userMsg = `Here is my career profile:
-- Age: ${profile.age}
-- Current role: ${profile.role}
-- Industry: ${profile.industry}
-- Top skills: ${profile.skills}
-- I want more of: ${profile.goals.join(', ')}
-- Years of experience: ${profile.experience || 'not specified'}
-- Education: ${profile.education || 'not specified'}
-- Target timeline: ${profile.timeline || 'not specified'}
-- Location flexibility: ${profile.location || 'not specified'}
-- I want less of: ${profile.avoids.join(', ') || 'not specified'}
-- Risk tolerance: ${profile.risk}/5
-- Additional context: ${profile.context || 'none'}
+Generate exactly 4 paths in this order: LevelUp (grow/promote within current role — no job change), Adjacent (low-friction pivot), Bold (meaningful reinvention), Moonshot (high-ambition swing). Be specific to their profile. Keep eli5 to 2 short sentences.`;
 
-Please generate 3 career paths: one Adjacent, one Bold, one Moonshot. Make them specific and honest. Each must feel genuinely tailored to my specific profile, not generic career advice.`;
+  const msg=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
 
-  try {
-    const raw = await callClaude([{ role: 'user', content: userMsg }], systemPrompt);
-    const parsed = extractJSON(raw);
-    if (!parsed.paths || !Array.isArray(parsed.paths)) throw new Error('Missing paths array in response');
-    state.paths = parsed.paths;
-    renderPaths();
-    showScreen('paths');
-  } catch (e) {
-    showScreen('form');
-    const msg = e.message || 'Unknown error';
-    showToast(`Error: ${msg.slice(0, 80)}`);
-    console.error('Stage 1 error:', e);
+  try{
+    const raw=await callClaude([{role:'user',content:msg}],sys);
+    const parsed=extractJSON(raw);
+    if(!parsed.paths||!Array.isArray(parsed.paths))throw new Error('Missing paths array');
+    state.paths=parsed.paths;
+    finishLoadingProgress();
+    setTimeout(()=>{renderPaths();showScreen('paths');},400);
+  }catch(e){
+    finishLoadingProgress();showScreen('form');
+    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    console.error('Stage 1:',e);
   }
 }
 
 // ─── RENDER PATHS ─────────────────────────────────────────────────────────────
-function renderPaths() {
-  const container = document.getElementById('path-cards-container');
-  const badgeMap = {
-    Adjacent: { cls: 'badge-adjacent', icon: '→' },
-    Bold: { cls: 'badge-bold', icon: '↗' },
-    Moonshot: { cls: 'badge-moonshot', icon: '🚀' }
+function renderPaths(){
+  const c=document.getElementById('path-cards-container');
+  const bmap={
+    LevelUp:{cls:'badge-levelup',icon:'⬆',tip:'Advice on growing, getting promoted, upskilling, and becoming more valuable in your current role — no job change needed.'},
+    Adjacent:{cls:'badge-adjacent',icon:'→',tip:'A realistic move using most of your existing skills. Lower risk, faster to achieve than a full reinvention.'},
+    Bold:{cls:'badge-bold',icon:'↗',tip:'A meaningful career change that requires new skills but is achievable with focused effort over time.'},
+    Moonshot:{cls:'badge-moonshot',icon:'🚀',tip:'A high-ambition path requiring serious time and investment — but could be transformational if you commit.'}
   };
+  const EFFORT_TIP='Estimated effort relative to your current skills and experience. 1 = minimal stretch, 5 = major investment.';
+  const TIME_TIP='A realistic estimate of how long this path takes based on your profile — not the best-case scenario.';
+  const AI_TIP='How resilient this career is against AI disruption over the next 5–10 years. Higher score = more durable.';
+  const ELI5_TIP='A plain-English summary you can share with friends or family who aren\'t in your field.';
 
-  container.innerHTML = state.paths.map((p, i) => {
-    const badge = badgeMap[p.pathType] || badgeMap.Adjacent;
-    const dots = Array.from({ length: 5 }, (_, d) =>
-      `<div class="effort-dot${d < p.effortScore ? ' filled' : ''}"></div>`
-    ).join('');
-    const aiColor = p.aiResilienceScore >= 4 ? 'var(--sage)' : p.aiResilienceScore >= 3 ? 'var(--terracotta)' : '#C0392B';
-    const aiLabel = p.aiResilienceScore >= 4 ? '🛡 AI-resilient' : p.aiResilienceScore >= 3 ? '⚡ Moderate AI risk' : '⚠️ High AI risk';
-
-    return `
-    <div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
-      <div class="path-badge ${badge.cls}">${badge.icon} ${p.pathType}</div>
+  c.innerHTML=state.paths.map((p,i)=>{
+    const b=bmap[p.pathType]||bmap.Adjacent;
+    const dots=Array.from({length:5},(_,d)=>`<div class="effort-dot${d<p.effortScore?' filled':''}"></div>`).join('');
+    const sc=p.aiResilienceScore||3;
+    const ac=sc>=4?'var(--sage)':sc>=3?'var(--terracotta)':'#C0392B';
+    const al=sc>=4?'🛡 AI-resilient':sc>=3?'⚡ Moderate AI risk':'⚠️ High AI risk';
+    const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
+    const T=(s)=>`t${i}${s}`;
+    return`<div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <div class="path-badge ${b.cls}" style="margin-bottom:0">${b.icon} ${label}</div>
+        <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('b')}')" >i</span>
+      </div>
+      <div class="tooltip-box" id="${T('b')}">${b.tip}</div>
       <div class="path-title">${p.pathTitle}</div>
       <div class="path-tagline">${p.tagline}</div>
       <div class="path-eli5">
-        <strong>In plain English</strong>
+        <strong>In plain English <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('e5')}')">i</span></strong>
+        <div class="tooltip-box" id="${T('e5')}">${ELI5_TIP}</div>
         ${p.eli5}
       </div>
       <div class="path-meta">
         <div class="meta-item">
-          <div class="effort-dots">${dots}</div>
-          <span>Effort</span>
+          <div class="effort-dots">${dots}</div><span>Effort</span>
+          <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('ef')}')">i</span>
+          <div class="tooltip-box" id="${T('ef')}">${EFFORT_TIP}</div>
         </div>
-        <div class="meta-item">⏱ ${p.timeline}</div>
-        <div class="ai-resilience" style="color:${aiColor};background:${aiColor}15">${aiLabel}</div>
+        <div class="meta-item">
+          ⏱ ${p.timeline}
+          <span class="info-icon" onclick="event.stopPropagation();toggleTooltip('${T('tl')}')">i</span>
+          <div class="tooltip-box" id="${T('tl')}">${TIME_TIP}</div>
+        </div>
+        <div class="ai-resilience" style="color:${ac};background:${ac}18">
+          ${al}
+          <span class="info-icon" style="background:${ac}30;color:${ac}" onclick="event.stopPropagation();toggleTooltip('${T('ai')}')">i</span>
+          <div class="tooltip-box" id="${T('ai')}">${AI_TIP}${p.aiResilienceNote?' — '+p.aiResilienceNote:''}</div>
+        </div>
       </div>
       <div class="path-cta">
         <span style="font-size:0.82rem;color:var(--warm-gray)">Tap to explore this path in depth</span>
@@ -1467,297 +610,141 @@ function renderPaths() {
   }).join('');
 }
 
-// ─── STAGE 2: DEEP DIVE ───────────────────────────────────────────────────────
-async function selectPath(idx) {
-  state.selectedPath = state.paths[idx];
-  state.chatHistory = [];
+// ─── STAGE 2 — deep dive ──────────────────────────────────────────────────────
+async function selectPath(idx){
+  state.selectedPath=state.paths[idx];
+  state.chatHistory=[];
   showScreen('loading');
-  document.getElementById('loadingText').textContent = `Charting your path to ${state.selectedPath.pathTitle}...`;
+  startLoadingProgress(S2,`Charting your path to ${state.selectedPath.pathTitle}...`);
 
-  const systemPrompt = `You are Pivit, a warm, deeply knowledgeable career advisor. Provide rich, specific, actionable guidance. Be honest. Never guarantee outcomes. Do not name specific companies or schools.
+  const isLU=state.selectedPath.pathType==='LevelUp';
+  const sys=`You are Pivit, a warm career advisor. Be specific and honest. No company or school names. No guaranteed outcomes.
 
-Respond with ONLY valid JSON, no markdown, no backticks:
-{
-  "expandedRoadmap": [
-    { "title": "string", "detail": "string — 2-3 sentences of specific advice", "timeEstimate": "string" }
-  ],
-  "resources": ["string — types of learning resources, communities, certifications (no specific URLs)"],
-  "risks": "string — honest risks and how to navigate them",
-  "dayInTheLife": "string — a vivid paragraph about a typical day in this role",
-  "aiProofingAdvice": "string — 3 specific, concrete moves to make this career AI-proof",
-  "quickWins": ["string — things they can do this week to start"]
-}`;
+Respond ONLY with valid JSON, no markdown:
+{"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
 
-  const userMsg = `My profile: ${JSON.stringify(state.profile)}
-My chosen path: ${JSON.stringify(state.selectedPath)}
-Provide a detailed deep dive with an expanded roadmap, resources, honest risks, day in the life, AI-proofing advice, and quick wins I can start this week.`;
+${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
+Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
 
-  try {
-    const raw = await callClaude([{ role: 'user', content: userMsg }], systemPrompt);
-    state.deepDive = extractJSON(raw);
-    renderDeepDive();
-    showScreen('deep');
-  } catch (e) {
-    showScreen('paths');
-    const msg = e.message || 'Unknown error';
-    showToast(`Error: ${msg.slice(0, 80)}`);
-    console.error('Stage 2 error:', e);
+  const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(state.selectedPath)}`;
+
+  try{
+    const raw=await callClaude([{role:'user',content:msg}],sys);
+    state.deepDive=extractJSON(raw);
+    finishLoadingProgress();
+    setTimeout(()=>{renderDeepDive();showScreen('deep');},400);
+  }catch(e){
+    finishLoadingProgress();showScreen('paths');
+    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    console.error('Stage 2:',e);
   }
 }
 
 // ─── RENDER DEEP DIVE ─────────────────────────────────────────────────────────
-function renderDeepDive() {
-  const p = state.selectedPath;
-  const d = state.deepDive;
-  const badgeMap = { Adjacent: 'badge-adjacent', Bold: 'badge-bold', Moonshot: 'badge-moonshot' };
+function renderDeepDive(){
+  const p=state.selectedPath,d=state.deepDive;
+  const bmap={LevelUp:'badge-levelup',Adjacent:'badge-adjacent',Bold:'badge-bold',Moonshot:'badge-moonshot'};
+  const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
 
-  const roadmapHTML = d.expandedRoadmap.map((step, i) => `
+  const roadHTML=(d.expandedRoadmap||[]).map((s,i)=>`
     <div class="roadmap-step" style="animation-delay:${i*0.05}s">
       <div class="step-num">${i+1}</div>
       <div class="step-content">
-        <div class="step-title">${step.title} <span style="color:var(--warm-gray);font-weight:400;font-size:0.82rem">· ${step.timeEstimate}</span></div>
-        <div class="step-detail">${step.detail}</div>
+        <div class="step-title">${s.title} <span style="color:var(--warm-gray);font-weight:400;font-size:0.82rem">· ${s.timeEstimate}</span></div>
+        <div class="step-detail">${s.detail}</div>
       </div>
     </div>`).join('');
 
-  const gapsHTML = (p.keySkillGaps || []).map(g => `<div class="gap-pill">${g}</div>`).join('');
+  const gapsHTML=(p.keySkillGaps||[]).map(g=>`<div class="gap-pill">${g}</div>`).join('');
+  const winsHTML=(d.quickWins||[]).map(w=>`<div class="roadmap-step"><div class="step-num" style="background:var(--sage)">✓</div><div class="step-content"><div class="step-detail">${w}</div></div></div>`).join('');
+  const resHTML=(d.resources||[]).map(r=>`<div class="gap-pill" style="background:var(--sage-pale);color:var(--sage)">${r}</div>`).join('');
 
-  const quickWinsHTML = (d.quickWins || []).map(w => `
-    <div class="roadmap-step">
-      <div class="step-num" style="background:var(--sage)">✓</div>
-      <div class="step-content"><div class="step-detail">${w}</div></div>
-    </div>`).join('');
-
-  const resourcesHTML = (d.resources || []).map(r => `<div class="gap-pill" style="background:var(--sage-pale);color:var(--sage)">${r}</div>`).join('');
-
-  document.getElementById('deep-content').innerHTML = `
+  document.getElementById('deep-content').innerHTML=`
     <div class="deep-header">
-      <div class="path-badge ${badgeMap[p.pathType]}" style="margin-bottom:12px">${p.pathType}</div>
+      <div class="path-badge ${bmap[p.pathType]||'badge-adjacent'}" style="margin-bottom:12px">${label}</div>
       <h2>${p.pathTitle}</h2>
       <p style="color:var(--warm-gray);font-size:0.95rem;margin-top:8px">${p.tagline}</p>
     </div>
-
+    <div class="card"><div class="path-eli5" style="margin-bottom:0"><strong>The short version</strong>${p.eli5}</div></div>
+    <div class="card"><div class="section-title">Your roadmap</div><div class="roadmap-steps">${roadHTML}</div></div>
     <div class="card">
-      <div class="path-eli5" style="margin-bottom:0">
-        <strong>The short version</strong>
-        ${p.eli5}
-      </div>
+      <div class="section-title">Skill gaps to close</div><div class="skill-gaps">${gapsHTML}</div>
+      <div class="section-title">Learning resources</div><div class="skill-gaps">${resHTML}</div>
     </div>
-
-    <div class="card">
-      <div class="section-title">Your roadmap</div>
-      <div class="roadmap-steps">${roadmapHTML}</div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">Skill gaps to close</div>
-      <div class="skill-gaps">${gapsHTML}</div>
-
-      <div class="section-title">Learning resources</div>
-      <div class="skill-gaps">${resourcesHTML}</div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">Start this week</div>
-      <div class="roadmap-steps">${quickWinsHTML}</div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">A day in the life</div>
-      <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal);font-style:italic">"${d.dayInTheLife}"</p>
-    </div>
-
-    <div class="card">
-      <div class="section-title">Honest risks</div>
-      <p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal)">${d.risks}</p>
-    </div>
-
+    <div class="card"><div class="section-title">Start this week</div><div class="roadmap-steps">${winsHTML}</div></div>
+    <div class="card"><div class="section-title">A day in the life</div><p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal);font-style:italic">"${d.dayInTheLife}"</p></div>
+    <div class="card"><div class="section-title">Honest risks</div><p style="font-size:0.92rem;line-height:1.7;color:var(--charcoal)">${d.risks}</p></div>
     <div class="card">
       <div class="section-title">🛡 AI-proofing this path</div>
-      <div class="ai-proof-box">
-        <p>${d.aiProofingAdvice}</p>
-      </div>
-      <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">
-        AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}
-      </p>
-    </div>
-  `;
+      <div class="ai-proof-box"><p>${d.aiProofingAdvice}</p></div>
+      <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
+    </div>`;
 
-  // Reset chat
-  document.getElementById('chatMessages').innerHTML = '';
-  state.chatHistory = [];
-  addChatMessage('assistant', `I've mapped out the path to ${p.pathTitle} for you. What questions do you have? I'm here to get real with you.`);
+  document.getElementById('chatMessages').innerHTML='';
+  state.chatHistory=[];
+  addChatMessage('assistant',`I've mapped out the path to ${p.pathTitle} for you. What questions do you have?`);
 }
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────────
-function addChatMessage(role, text) {
-  const container = document.getElementById('chatMessages');
-  const initials = role === 'assistant' ? 'P' : 'You';
-  const div = document.createElement('div');
-  div.className = `message ${role}`;
-  div.innerHTML = `
-    <div class="message-avatar">${initials}</div>
-    <div class="message-bubble">${text}</div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return div;
+function addChatMessage(role,text){
+  const c=document.getElementById('chatMessages');
+  const d=document.createElement('div');
+  d.className=`message ${role}`;
+  d.innerHTML=`<div class="message-avatar">${role==='assistant'?'P':'You'}</div><div class="message-bubble">${text}</div>`;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;return d;
 }
-
-async function sendChat() {
-  const input = document.getElementById('chatInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-
-  input.value = '';
-  input.style.height = 'auto';
-  addChatMessage('user', msg);
-  state.chatHistory.push({ role: 'user', content: msg });
-
-  const sendBtn = document.getElementById('chatSendBtn');
-  sendBtn.disabled = true;
-
-  const typingDiv = addChatMessage('assistant', '<em style="color:var(--warm-gray)">Pivit is thinking...</em>');
-
-  const systemPrompt = `You are Pivit, a warm, honest career advisor. The user has selected a career path and you're having a follow-up conversation. Be specific, honest, and human. Keep responses concise (2-4 paragraphs max). Never guarantee outcomes. Do not name specific companies or schools. The user's profile: ${JSON.stringify(state.profile)}. Their chosen path: ${JSON.stringify(state.selectedPath)}.`;
-
-  const messages = [
-    { role: 'user', content: `Context on my path: ${JSON.stringify(state.deepDive)}` },
-    { role: 'assistant', content: `Got it. I've reviewed your path to ${state.selectedPath.pathTitle}. What would you like to explore?` },
-    ...state.chatHistory
-  ];
-
-  try {
-    const reply = await callClaude(messages, systemPrompt);
-    typingDiv.querySelector('.message-bubble').innerHTML = reply.replace(/\n/g, '<br>');
-    state.chatHistory.push({ role: 'assistant', content: reply });
-  } catch (e) {
-    typingDiv.querySelector('.message-bubble').innerHTML = 'Something went wrong. Please try again.';
-  }
-
-  sendBtn.disabled = false;
+async function sendChat(){
+  const inp=document.getElementById('chatInput');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';inp.style.height='auto';
+  addChatMessage('user',msg);
+  state.chatHistory.push({role:'user',content:msg});
+  const btn=document.getElementById('chatSendBtn');btn.disabled=true;
+  const td=addChatMessage('assistant','<em style="color:var(--warm-gray)">Pivit is thinking...</em>');
+  const sys=`You are Pivit, a warm honest career advisor in a follow-up chat. Be specific and concise (2-3 paragraphs). No company/school names. Profile:${JSON.stringify(state.profile)}. Path:${JSON.stringify(state.selectedPath)}.`;
+  const msgs=[{role:'user',content:`Path context:${JSON.stringify(state.deepDive)}`},{role:'assistant',content:`Ready to help with ${state.selectedPath.pathTitle}.`},...state.chatHistory];
+  try{
+    const reply=await callClaude(msgs,sys);
+    td.querySelector('.message-bubble').innerHTML=reply.replace(/\n/g,'<br>');
+    state.chatHistory.push({role:'assistant',content:reply});
+  }catch(e){td.querySelector('.message-bubble').innerHTML='Something went wrong. Please try again.';}
+  btn.disabled=false;
 }
-
-function handleChatKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendChat();
-  }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
+function handleChatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
-function buildTextReport() {
-  const p = state.selectedPath;
-  const d = state.deepDive;
-  if (!p || !d) return '';
-
-  return `PIVIT CAREER REPORT
-Generated: ${new Date().toLocaleDateString()}
-═══════════════════════════════
-
-PATH: ${p.pathTitle} (${p.pathType})
-${p.tagline}
-
-THE SHORT VERSION
-${p.eli5}
-
-WHY THIS FITS YOU
-${p.whyItFits}
-
-YOUR ROADMAP
-${d.expandedRoadmap.map((s,i) => `${i+1}. ${s.title} (${s.timeEstimate})\n   ${s.detail}`).join('\n\n')}
-
-SKILL GAPS TO CLOSE
-${(p.keySkillGaps||[]).join(', ')}
-
-START THIS WEEK
-${(d.quickWins||[]).map((w,i) => `• ${w}`).join('\n')}
-
-A DAY IN THE LIFE
-${d.dayInTheLife}
-
-HONEST RISKS
-${d.risks}
-
-AI-PROOFING THIS PATH
-${d.aiProofingAdvice}
-
-AI Resilience Score: ${p.aiResilienceScore}/5
-${p.aiResilienceNote}
-
-───────────────────────────────
-Generated by Pivit · pivit.digital
-⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor, recruiter, or professional advisor. Consult a real expert before making major career decisions.
-Your data was never stored or shared.`;
+function buildReport(){
+  const p=state.selectedPath,d=state.deepDive;if(!p||!d)return'';
+  return`PIVIT CAREER REPORT\nGenerated: ${new Date().toLocaleDateString()}\n${'='.repeat(32)}\n\nPATH: ${p.pathTitle} (${p.pathType==='LevelUp'?'Level Up':p.pathType})\n${p.tagline}\n\nTHE SHORT VERSION\n${p.eli5}\n\nWHY THIS FITS YOU\n${p.whyItFits}\n\nROADMAP\n${(d.expandedRoadmap||[]).map((s,i)=>`${i+1}. ${s.title} (${s.timeEstimate})\n   ${s.detail}`).join('\n\n')}\n\nSKILL GAPS\n${(p.keySkillGaps||[]).join(', ')}\n\nSTART THIS WEEK\n${(d.quickWins||[]).map(w=>`• ${w}`).join('\n')}\n\nA DAY IN THE LIFE\n${d.dayInTheLife}\n\nHONEST RISKS\n${d.risks}\n\nAI-PROOFING\n${d.aiProofingAdvice}\n\nAI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}\n\n${'-'.repeat(32)}\nGenerated by Pivit\n⚠️ AI-generated for educational purposes only. Consult a qualified career professional.\nYour data was never stored or shared.`;
 }
-
-function exportCopy() {
-  const text = buildTextReport();
-  if (!text) { showToast('No report to copy yet'); return; }
-  navigator.clipboard.writeText(text).then(() => showToast('✓ Report copied to clipboard'));
-}
-
-function exportEmail() {
-  const text = buildTextReport();
-  if (!text) { showToast('No report to share yet'); return; }
-  const subject = encodeURIComponent(`My Pivit Career Report — ${state.selectedPath?.pathTitle}`);
-  const body = encodeURIComponent(text);
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
-}
-
-function exportPDF() {
-  const p = state.selectedPath;
-  const d = state.deepDive;
-  if (!p || !d) { showToast('No report to export yet'); return; }
-
-  const printWindow = window.open('', '_blank');
-  printWindow.document.write(`<!DOCTYPE html><html><head>
-    <title>Pivit Report — ${p.pathTitle}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-      body { font-family: 'DM Sans', sans-serif; color: #2D2926; max-width: 680px; margin: 0 auto; padding: 48px 32px; }
-      h1 { font-family: 'Lora', serif; font-size: 2rem; color: #C4714A; margin-bottom: 4px; }
-      h2 { font-family: 'Lora', serif; font-size: 1.1rem; margin-top: 32px; margin-bottom: 8px; color: #2D2926; }
-      .badge { display: inline-block; background: #F5E6DC; color: #C4714A; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; margin-bottom: 12px; }
-      .eli5 { background: #F7F3EE; border-left: 3px solid #E8A882; padding: 16px; border-radius: 8px; font-style: italic; margin: 16px 0; }
-      .step { display: flex; gap: 12px; margin-bottom: 12px; }
-      .step-num { width: 24px; height: 24px; background: #C4714A; color: white; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-      .ai-box { background: #E8F2EC; border-left: 3px solid #7A9E8E; padding: 16px; border-radius: 8px; margin-top: 8px; }
-      .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #D4CCC5; font-size: 0.75rem; color: #6B6259; }
-      p { line-height: 1.7; font-size: 0.92rem; }
-    </style>
-  </head><body>
-    <div class="badge">${p.pathType} Path</div>
-    <h1>${p.pathTitle}</h1>
-    <p>${p.tagline}</p>
-    <div class="eli5"><strong style="font-style:normal;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:#C4714A">The short version</strong><br>${p.eli5}</div>
-    <h2>Why this fits you</h2><p>${p.whyItFits}</p>
-    <h2>Your roadmap</h2>
-    ${d.expandedRoadmap.map((s,i) => `<div class="step"><div class="step-num">${i+1}</div><div><strong>${s.title}</strong> · <em style="font-size:0.82rem;color:#6B6259">${s.timeEstimate}</em><br><span style="font-size:0.88rem">${s.detail}</span></div></div>`).join('')}
-    <h2>Start this week</h2>
-    ${(d.quickWins||[]).map(w => `<p>• ${w}</p>`).join('')}
-    <h2>A day in the life</h2><p style="font-style:italic">"${d.dayInTheLife}"</p>
-    <h2>Honest risks</h2><p>${d.risks}</p>
-    <h2>🛡 AI-proofing this path</h2>
-    <div class="ai-box"><p>${d.aiProofingAdvice}</p></div>
-    <p style="margin-top:8px;font-size:0.82rem;color:#6B6259">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
-    <div class="footer">Generated by Pivit · ${new Date().toLocaleDateString()} · Your data was never stored or shared.<br>⚠️ AI-generated for educational purposes only. Not a substitute for advice from a qualified career counselor or professional advisor.</div>
+function exportCopy(){const t=buildReport();if(!t){showToast('No report yet');return;}navigator.clipboard.writeText(t).then(()=>showToast('✓ Copied to clipboard'));}
+function exportEmail(){const t=buildReport();if(!t){showToast('No report yet');return;}window.location.href=`mailto:?subject=${encodeURIComponent('My Pivit Career Report — '+(state.selectedPath?.pathTitle||''))}&body=${encodeURIComponent(t)}`;}
+function exportPDF(){
+  const p=state.selectedPath,d=state.deepDive;if(!p||!d){showToast('No report yet');return;}
+  const w=window.open('','_blank');
+  const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
+  w.document.write(`<!DOCTYPE html><html><head><title>Pivit — ${p.pathTitle}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>body{font-family:'DM Sans',sans-serif;color:#2D2926;max-width:680px;margin:0 auto;padding:48px 32px}h1{font-family:'Lora',serif;font-size:2rem;color:#C4714A}h2{font-family:'Lora',serif;font-size:1.1rem;margin:28px 0 8px}.badge{display:inline-block;background:#F5E6DC;color:#C4714A;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:12px}.eli5{background:#F7F3EE;border-left:3px solid #E8A882;padding:16px;border-radius:8px;font-style:italic;margin:16px 0}.step{display:flex;gap:12px;margin-bottom:12px}.sn{width:24px;height:24px;background:#C4714A;color:white;border-radius:50%;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}.ai{background:#E8F2EC;border-left:3px solid #7A9E8E;padding:16px;border-radius:8px}.footer{margin-top:48px;padding-top:16px;border-top:1px solid #D4CCC5;font-size:.75rem;color:#6B6259}p{line-height:1.7;font-size:.92rem}</style></head><body>
+  <div class="badge">${label}</div><h1>${p.pathTitle}</h1><p>${p.tagline}</p>
+  <div class="eli5"><strong style="font-style:normal;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#C4714A">The short version</strong><br>${p.eli5}</div>
+  <h2>Why this fits you</h2><p>${p.whyItFits}</p>
+  <h2>Your roadmap</h2>${(d.expandedRoadmap||[]).map((s,i)=>`<div class="step"><div class="sn">${i+1}</div><div><strong>${s.title}</strong> · <em style="font-size:.82rem;color:#6B6259">${s.timeEstimate}</em><br><span style="font-size:.88rem">${s.detail}</span></div></div>`).join('')}
+  <h2>Start this week</h2>${(d.quickWins||[]).map(w=>`<p>• ${w}</p>`).join('')}
+  <h2>A day in the life</h2><p style="font-style:italic">"${d.dayInTheLife}"</p>
+  <h2>Honest risks</h2><p>${d.risks}</p>
+  <h2>AI-proofing this path</h2><div class="ai"><p>${d.aiProofingAdvice}</p></div>
+  <p style="margin-top:8px;font-size:.82rem;color:#6B6259">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
+  <div class="footer">Generated by Pivit · ${new Date().toLocaleDateString()}<br>⚠️ AI-generated for educational purposes only. Not a substitute for professional career advice.</div>
   </body></html>`);
-  printWindow.document.close();
-  printWindow.focus();
-  setTimeout(() => { printWindow.print(); }, 500);
+  w.document.close();w.focus();setTimeout(()=>w.print(),500);
 }
 
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
