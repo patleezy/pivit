@@ -209,7 +209,7 @@
   .explore-other{text-align:center;padding:24px;border-top:1px solid var(--light-gray);margin-top:16px;}
 
   /* SECTION JUMPER */
-  .section-jumper{position:sticky;top:57px;z-index:90;background:var(--cream);padding:10px 0;margin-bottom:8px;border-bottom:1px solid var(--light-gray);}
+  .section-jumper{position:sticky;top:57px;z-index:90;background:var(--cream);padding:12px 0 10px;margin-bottom:8px;border-bottom:1px solid var(--light-gray);}
   .section-jumper-inner{display:flex;gap:6px;overflow-x:auto;padding:0 2px;scrollbar-width:none;}
   .section-jumper-inner::-webkit-scrollbar{display:none;}
   .jump-pill{flex-shrink:0;padding:6px 14px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--card-bg);font-size:0.78rem;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;white-space:nowrap;}
@@ -225,6 +225,27 @@
   .deep-section-chevron.open{transform:rotate(180deg);}
   .deep-section-body{padding:0 28px 24px;animation:fadeUp 0.2s ease;}
   .deep-section-body.collapsed{display:none;}
+
+  /* SAVED CARDS */
+  .saved-section{margin-bottom:32px;animation:fadeUp 0.5s ease both;}
+  .saved-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .saved-section-title{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:var(--charcoal);display:flex;align-items:center;gap:8px;}
+  .saved-section-title span{font-size:1.1rem;}
+  .saved-clear-btn{font-size:0.75rem;color:var(--warm-gray);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:'DM Sans',sans-serif;transition:var(--transition);}
+  .saved-clear-btn:hover{color:var(--terracotta);}
+  .saved-card{background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;cursor:pointer;transition:var(--transition);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .saved-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);border-color:var(--terracotta-light);}
+  .saved-card-info{flex:1;min-width:0;}
+  .saved-card-title{font-family:'Lora',serif;font-size:1rem;font-weight:600;color:var(--charcoal);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .saved-card-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .saved-card-tagline{font-size:0.82rem;color:var(--warm-gray);line-height:1.4;margin-bottom:8px;}
+  .saved-remove-btn{background:none;border:none;cursor:pointer;color:var(--warm-gray);font-size:1rem;padding:4px;transition:var(--transition);flex-shrink:0;line-height:1;}
+  .saved-remove-btn:hover{color:var(--terracotta);}
+
+  /* BOOKMARK BUTTON ON PATH CARDS */
+  .bookmark-btn{position:absolute;top:16px;right:16px;background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;transition:var(--transition);z-index:10;}
+  .bookmark-btn:hover{border-color:var(--terracotta);background:var(--terracotta-pale);}
+  .bookmark-btn.saved{background:var(--terracotta);border-color:var(--terracotta);color:white;}
 
   .clear-data-link{color:var(--warm-gray);font-size:0.78rem;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif;transition:var(--transition);}
   .clear-data-link:hover{color:var(--terracotta);}
@@ -271,10 +292,20 @@
 
   <!-- FORM -->
   <div id="screen-form">
+
+    <!-- SAVED CARDS (shown when user has bookmarks) -->
+    <div class="saved-section hidden" id="savedSection">
+      <div class="saved-section-header">
+        <div class="saved-section-title"><span>🔖</span> Your saved paths</div>
+        <button class="saved-clear-btn" onclick="clearAllSaved()">Clear all</button>
+      </div>
+      <div id="savedCardsContainer"></div>
+    </div>
+
     <div class="hero">
-      <div class="hero-eyebrow">Career Intelligence</div>
-      <h1>Where could your career <em>go next?</em></h1>
-      <p>Tell Pivit where you are. We'll map honest, thoughtful paths to where you could be.</p>
+      <div class="hero-eyebrow">AI-Powered Career Intelligence</div>
+      <h1>Your next career move, <em>mapped honestly.</em></h1>
+      <p>Pivit uses AI to map your next career move around your actual background — from a promotion roadmap to a full reinvention — with honest timelines, skill gaps, and AI resilience scores.</p>
     </div>
 
     <div class="card" style="animation-delay:0.1s">
@@ -423,6 +454,7 @@
         <button class="jump-pill" onclick="jumpTo('sec-day')" id="jp-day">Day in Life</button>
         <button class="jump-pill" onclick="jumpTo('sec-risks')" id="jp-risks">Risks</button>
         <button class="jump-pill" onclick="jumpTo('sec-ai')" id="jp-ai">AI-Proof</button>
+        <button class="jump-pill" onclick="jumpTo('sec-chat')" id="jp-chat">Q&amp;A</button>
       </div>
     </div>
 
@@ -435,7 +467,7 @@
         <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
       </div>
     </div>
-    <div class="chat-section card">
+    <div class="chat-section card" id="sec-chat">
       <div class="chat-title">Ask Pivit anything about this path</div>
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-row">
@@ -536,9 +568,10 @@ function loadProfile(){
 }
 function clearData(){
   if(!confirm('Clear all your saved profile data?'))return;
-  ['pivit_profile','pivit_save','pivit_theme'].forEach(k=>localStorage.removeItem(k));
+  ['pivit_profile','pivit_save','pivit_theme','pivit_saved_cards'].forEach(k=>localStorage.removeItem(k));
   document.getElementById('saveProfile').checked=false;
   document.getElementById('clearBtn').style.display='none';
+  renderSavedCards();
   showToast('Profile data cleared');
 }
 function collectProfile(){
@@ -601,6 +634,7 @@ function finishLoadingProgress(){
 function showScreen(name){
   ['form','loading','paths','deep'].forEach(s=>document.getElementById(`screen-${s}`).classList.toggle('hidden',s!==name));
   window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='form')renderSavedCards();
 }
 
 // ─── API ──────────────────────────────────────────────────────────────────────
@@ -684,7 +718,9 @@ function renderPaths(){
     const ac=sc>=4?'var(--sage)':sc>=3?'var(--terracotta)':'#C0392B';
     const al=sc>=4?'🛡 AI-resilient':sc>=3?'⚡ Moderate AI risk':'⚠️ High AI risk';
     const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
+    const isSaved=isCardSaved(i);
     return`<div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
+      <button class="bookmark-btn${isSaved?' saved':''}" onclick="event.stopPropagation();toggleBookmark(${i})" id="bookmark-${i}" title="${isSaved?'Remove from saved':'Save this path'}">${isSaved?'🔖':'🔖'}</button>
       <div class="path-badge ${b.cls}" style="margin-bottom:14px">${b.icon} ${label}</div>
       <div class="path-title">${p.pathTitle}</div>
       <div class="path-tagline">${p.tagline}</div>
@@ -836,6 +872,133 @@ function renderDeepDive(){
   setTimeout(initScrollSpy, 100);
 }
 
+// ─── SAVED CARDS ──────────────────────────────────────────────────────────────
+function getSavedCards(){
+  try{ return JSON.parse(localStorage.getItem('pivit_saved_cards')||'[]'); }
+  catch{ return []; }
+}
+
+function setSavedCards(cards){
+  localStorage.setItem('pivit_saved_cards', JSON.stringify(cards));
+}
+
+function isCardSaved(idx){
+  const card=state.paths[idx];
+  if(!card)return false;
+  return getSavedCards().some(c=>c.pathTitle===card.pathTitle&&c.pathType===card.pathType);
+}
+
+function toggleBookmark(idx){
+  const card=state.paths[idx];
+  if(!card)return;
+  const saved=getSavedCards();
+  const existingIdx=saved.findIndex(c=>c.pathTitle===card.pathTitle&&c.pathType===card.pathType);
+  if(existingIdx>=0){
+    saved.splice(existingIdx,1);
+    setSavedCards(saved);
+    showToast('Path removed from saved');
+  } else {
+    // Save card + current profile so we can re-run deep dive later
+    saved.unshift({...card, savedAt:Date.now(), profile:state.profile});
+    setSavedCards(saved);
+    showToast('🔖 Path saved!');
+  }
+  // Update button appearance
+  const btn=document.getElementById(`bookmark-${idx}`);
+  if(btn){
+    const nowSaved=isCardSaved(idx);
+    btn.classList.toggle('saved',nowSaved);
+  }
+  renderSavedCards();
+}
+
+function clearAllSaved(){
+  if(!confirm('Remove all saved paths?'))return;
+  localStorage.removeItem('pivit_saved_cards');
+  renderSavedCards();
+  showToast('Saved paths cleared');
+}
+
+function removeSavedCard(idx){
+  const saved=getSavedCards();
+  saved.splice(idx,1);
+  setSavedCards(saved);
+  renderSavedCards();
+  showToast('Path removed');
+}
+
+function renderSavedCards(){
+  const saved=getSavedCards();
+  const section=document.getElementById('savedSection');
+  const container=document.getElementById('savedCardsContainer');
+  if(!section||!container)return;
+  if(!saved.length){ section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+
+  const bmap={
+    LevelUp:{cls:'badge-levelup',icon:'⬆'},
+    Adjacent:{cls:'badge-adjacent',icon:'→'},
+    Bold:{cls:'badge-bold',icon:'↗'},
+    Moonshot:{cls:'badge-moonshot',icon:'🚀'}
+  };
+
+  container.innerHTML=saved.map((card,i)=>{
+    const b=bmap[card.pathType]||bmap.Adjacent;
+    const label=card.pathType==='LevelUp'?'Level Up':card.pathType;
+    const savedDate=card.savedAt?new Date(card.savedAt).toLocaleDateString():'';
+    const sc=card.aiResilienceScore||3;
+    const ac=sc>=4?'var(--sage)':sc>=3?'var(--terracotta)':'#C0392B';
+    const al=sc>=4?'🛡 AI-resilient':sc>=3?'⚡ Moderate AI risk':'⚠️ High AI risk';
+    return`<div class="saved-card" onclick="loadSavedCard(${i})">
+      <div class="saved-card-info">
+        <div class="saved-card-meta" style="margin-bottom:8px">
+          <div class="path-badge ${b.cls}" style="font-size:0.65rem;padding:3px 10px">${b.icon} ${label}</div>
+          ${savedDate?`<span style="font-size:0.72rem;color:var(--warm-gray)">Saved ${savedDate}</span>`:''}
+        </div>
+        <div class="saved-card-title">${card.pathTitle}</div>
+        <div class="saved-card-tagline">${card.tagline}</div>
+        <div class="saved-card-meta">
+          <span class="ai-resilience" style="color:${ac};background:${ac}18;font-size:0.72rem;padding:3px 10px">${al}</span>
+          <span style="font-size:0.78rem;color:var(--warm-gray)">⏱ ${card.timeline}</span>
+        </div>
+      </div>
+      <button class="saved-remove-btn" onclick="event.stopPropagation();removeSavedCard(${i})" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+}
+
+async function loadSavedCard(idx){
+  const saved=getSavedCards();
+  const card=saved[idx];
+  if(!card)return;
+  // Restore profile and path, then run deep dive
+  state.profile=card.profile||state.profile;
+  state.selectedPath=card;
+  state.chatHistory=[];
+  showScreen('loading');
+  startLoadingProgress(S2,`Charting your path to ${card.pathTitle}...`);
+
+  const isLU=card.pathType==='LevelUp';
+  const sys=`You are Pivit, a warm career advisor. Be specific and honest. No company or school names. No guaranteed outcomes.
+
+Respond ONLY with valid JSON, no markdown:
+{"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
+
+${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
+Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
+
+  const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`;
+  try{
+    const raw=await callClaude([{role:'user',content:msg}],sys);
+    state.deepDive=extractJSON(raw);
+    finishLoadingProgress();
+    setTimeout(()=>{renderDeepDive();showScreen('deep');},400);
+  }catch(e){
+    finishLoadingProgress();showScreen('form');
+    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+  }
+}
+
 // ─── SECTION JUMPER ───────────────────────────────────────────────────────────
 function jumpTo(id){
   const el=document.getElementById(id);
@@ -857,7 +1020,7 @@ function jumpTo(id){
 function setActivePill(id){
   const map={
     'sec-roadmap':'jp-roadmap','sec-gaps':'jp-gaps','sec-wins':'jp-wins',
-    'sec-day':'jp-day','sec-risks':'jp-risks','sec-ai':'jp-ai'
+    'sec-day':'jp-day','sec-risks':'jp-risks','sec-ai':'jp-ai','sec-chat':'jp-chat'
   };
   document.querySelectorAll('.jump-pill').forEach(p=>p.classList.remove('active'));
   const pill=document.getElementById(map[id]);
@@ -877,7 +1040,7 @@ function toggleSection(id){
 
 // Scroll spy — update active jump pill as user scrolls
 function initScrollSpy(){
-  const sections=['sec-roadmap','sec-gaps','sec-wins','sec-day','sec-risks','sec-ai'];
+  const sections=['sec-roadmap','sec-gaps','sec-wins','sec-day','sec-risks','sec-ai','sec-chat'];
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting)setActivePill(entry.target.id);
@@ -956,6 +1119,7 @@ function showToast(msg){
 fetch('/api/ping').catch(()=>{});
 loadProfile();
 updateRiskSlider(document.getElementById('risk'));
+renderSavedCards();
 </script>
 </body>
 </html>
