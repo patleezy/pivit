@@ -72,8 +72,9 @@
   .legend-badge.badge-moonshot{background:#EDE8F5;color:#7B5EA7;border-color:#7B5EA7;}
   .legend-dots{display:flex;gap:3px;flex-shrink:0;margin-top:3px;}
   @media(max-width:600px){.legend-grid{grid-template-columns:1fr;}}
-  .form-footer{margin-top:24px;padding:20px 0 8px;border-top:1px solid var(--light-gray);text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;}
-  .form-footer-disclaimer{font-size:0.73rem;color:var(--warm-gray);line-height:1.6;max-width:480px;}
+  .form-footer{margin-top:24px;padding:16px 20px;border-radius:var(--radius-sm);background:var(--card-bg);border:1px solid var(--light-gray);text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;}
+  .form-footer-privacy{font-size:0.78rem;color:var(--warm-gray);line-height:1.5;}
+  .form-footer-disclaimer{font-size:0.73rem;color:var(--warm-gray);opacity:0.7;line-height:1.5;max-width:480px;}
 
   .card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;margin-bottom:24px;border:1px solid var(--light-gray);transition:var(--transition);animation:fadeUp 0.6s ease both;}
   .card-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:600;color:var(--charcoal);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
@@ -419,8 +420,8 @@
     <button class="btn btn-primary" onclick="generatePaths()">Map my possibilities →</button>
 
     <div class="form-footer">
-      <div class="privacy-note"><span class="privacy-dot"></span>Your profile stays on your device. API calls are processed by Anthropic and not used for AI training. Nothing is stored after your session.</div>
-      <div class="form-footer-disclaimer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor or professional advisor. Always consult a real expert before making major career decisions.</div>
+      <div class="form-footer-privacy">🔒 Your profile stays on your device. API calls processed by Anthropic — not used for AI training. Nothing stored after your session.</div>
+      <div class="form-footer-disclaimer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before major career decisions.</div>
     </div>
   </div>
 
@@ -560,8 +561,8 @@ function selectTone(tone){
   document.getElementById('tone-cheer').classList.toggle('selected',tone==='cheer');
 }
 function getToneInstruction(){
-  if(state.tone==='cheer')return"Be warm, encouraging, and motivational. Emphasize what's possible and frame challenges as opportunities. Lead with what they can achieve.";
-  return"Be direct, realistic, and specific. Don't sugarcoat difficulty. Give the unfiltered picture alongside actionable steps.";
+  if(state.tone==='cheer')return"Be warm, motivational, and optimistic. Lead with what's possible and exciting about each path. Frame every challenge as something surmountable with the right effort. Use energizing language — the user needs encouragement and belief in themselves.";
+  return"Be direct and unfiltered. If a path is hard, say so plainly. Give realistic timelines without softening them. Name the real obstacles the user will face. The user wants truth over comfort — respect that by being honest even when it's uncomfortable.";
 }
 
 // ─── EXPLORE MORE PATHS ───────────────────────────────────────────────────────
