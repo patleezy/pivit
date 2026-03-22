@@ -183,7 +183,7 @@
   .ai-proof-box{background:var(--sage-pale);border-radius:var(--radius-sm);padding:20px;border-left:3px solid var(--sage);}
   .ai-proof-box p{font-size:0.9rem;color:var(--charcoal);line-height:1.65;}
 
-  .export-bar{position:sticky;bottom:24px;background:var(--card-bg);border:1px solid var(--light-gray);border-radius:50px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-hover);margin-top:32px;animation:slideUp 0.4s ease both;gap:12px;flex-wrap:wrap;}
+  .export-bar{background:var(--card-bg);border:1px solid var(--light-gray);border-radius:var(--radius);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);margin-bottom:16px;gap:12px;flex-wrap:wrap;animation:fadeUp 0.4s ease both;}
   .export-label{font-size:0.82rem;color:var(--warm-gray);font-weight:500;white-space:nowrap;}
   .export-buttons{display:flex;gap:8px;flex-wrap:wrap;}
   .export-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.82rem;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;}
@@ -201,7 +201,7 @@
   .message.assistant .message-bubble{background:var(--card-bg);border:1px solid var(--light-gray);border-bottom-left-radius:4px;color:var(--charcoal);}
   .message.user .message-bubble{background:var(--terracotta);color:white;border-bottom-right-radius:4px;}
   .chat-input-row{display:flex;gap:10px;align-items:flex-end;}
-  .chat-input{flex:1;background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:16px;padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--charcoal);resize:none;outline:none;transition:var(--transition);min-height:52px;max-height:120px;}
+  .chat-input{flex:1;background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:16px;padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--charcoal);resize:none;outline:none;transition:var(--transition);min-height:64px;max-height:120px;}
   .chat-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(196,113,74,0.12);}
   .chat-send{width:52px;height:52px;border-radius:50%;background:var(--terracotta);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0;}
   .chat-send:hover:not(:disabled){background:#B5633D;transform:scale(1.05);}
@@ -209,7 +209,7 @@
   .explore-other{text-align:center;padding:24px;border-top:1px solid var(--light-gray);margin-top:16px;}
 
   /* SECTION JUMPER */
-  .section-jumper{position:sticky;top:57px;z-index:90;background:var(--cream);padding:12px 0 10px;margin-bottom:8px;border-bottom:1px solid var(--light-gray);}
+  .section-jumper{position:sticky;top:var(--header-h,57px);z-index:90;background:var(--cream);padding:12px 0 10px;margin-bottom:8px;border-bottom:1px solid var(--light-gray);}
   .section-jumper-inner{display:flex;gap:6px;overflow-x:auto;padding:0 2px;scrollbar-width:none;}
   .section-jumper-inner::-webkit-scrollbar{display:none;}
   .jump-pill{flex-shrink:0;padding:6px 14px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--card-bg);font-size:0.78rem;font-weight:600;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;white-space:nowrap;}
@@ -304,8 +304,8 @@
 
     <div class="hero">
       <div class="hero-eyebrow">AI-Powered Career Intelligence</div>
-      <h1>Your next career move, <em>mapped honestly.</em></h1>
-      <p>Pivit uses AI to map your next career move around your actual background — from a promotion roadmap to a full reinvention — with honest timelines, skill gaps, and AI resilience scores.</p>
+      <h1>Your career — <em>from where you are to where you could be.</em></h1>
+      <p>Pivit uses AI to build personalized career paths around your actual background — with real timelines, skill gaps, and AI resilience scores.</p>
     </div>
 
     <div class="card" style="animation-delay:0.1s">
@@ -437,13 +437,23 @@
     </div>
 
     <div id="path-cards-container"></div>
-    <div class="text-center mt-24"><button class="btn btn-secondary" onclick="showScreen('form')">← Start over</button></div>
+    <div class="text-center mt-24"><button class="btn btn-secondary" onclick="showScreen('form')">← Edit profile</button></div>
     <div class="disclaimer-footer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before making major career decisions.</div>
   </div>
 
   <!-- DEEP DIVE -->
   <div id="screen-deep" class="hidden">
     <button class="back-btn" onclick="showScreen('paths')">← Back to all paths</button>
+
+    <!-- EXPORT BAR — static, top of report -->
+    <div class="export-bar">
+      <span class="export-label">💾 Save your report</span>
+      <div class="export-buttons">
+        <button class="export-btn" onclick="exportPDF()">📄 PDF</button>
+        <button class="export-btn" onclick="exportEmail()">✉️ Email</button>
+        <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
+      </div>
+    </div>
 
     <!-- STICKY SECTION JUMPER -->
     <div class="section-jumper" id="sectionJumper">
@@ -459,14 +469,6 @@
     </div>
 
     <div id="deep-content"></div>
-    <div class="export-bar">
-      <span class="export-label">Save your report</span>
-      <div class="export-buttons">
-        <button class="export-btn" onclick="exportPDF()">📄 PDF</button>
-        <button class="export-btn" onclick="exportEmail()">✉️ Email</button>
-        <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
-      </div>
-    </div>
     <div class="chat-section card" id="sec-chat">
       <div class="chat-title">Ask Pivit anything about this path</div>
       <div class="chat-messages" id="chatMessages"></div>
@@ -867,9 +869,15 @@ function renderDeepDive(){
   document.getElementById('chatMessages').innerHTML='';
   state.chatHistory=[];
   addChatMessage('assistant',`I've mapped out the path to ${p.pathTitle} for you. What questions do you have?`);
-  // Reset jumper active state and init scroll spy
+  // Update bookmark button state if this path is saved — now update with deep dive data
+  const saved=getSavedCards();
+  const savedIdx=saved.findIndex(c=>c.pathTitle===p.pathTitle&&c.pathType===p.pathType);
+  if(savedIdx>=0&&!saved[savedIdx].deepDive){
+    saved[savedIdx].deepDive=state.deepDive;
+    setSavedCards(saved);
+  }
   setActivePill('sec-roadmap');
-  setTimeout(initScrollSpy, 100);
+  setTimeout(initScrollSpy,100);
 }
 
 // ─── SAVED CARDS ──────────────────────────────────────────────────────────────
@@ -898,17 +906,14 @@ function toggleBookmark(idx){
     setSavedCards(saved);
     showToast('Path removed from saved');
   } else {
-    // Save card + current profile so we can re-run deep dive later
-    saved.unshift({...card, savedAt:Date.now(), profile:state.profile});
+    // Save card + profile + deep dive if already loaded for this path
+    const deepDiveData = (state.selectedPath?.pathTitle===card.pathTitle) ? state.deepDive : null;
+    saved.unshift({...card, savedAt:Date.now(), profile:state.profile, deepDive:deepDiveData});
     setSavedCards(saved);
     showToast('🔖 Path saved!');
   }
-  // Update button appearance
   const btn=document.getElementById(`bookmark-${idx}`);
-  if(btn){
-    const nowSaved=isCardSaved(idx);
-    btn.classList.toggle('saved',nowSaved);
-  }
+  if(btn) btn.classList.toggle('saved', isCardSaved(idx));
   renderSavedCards();
 }
 
@@ -971,13 +976,21 @@ async function loadSavedCard(idx){
   const saved=getSavedCards();
   const card=saved[idx];
   if(!card)return;
-  // Restore profile and path, then run deep dive
   state.profile=card.profile||state.profile;
   state.selectedPath=card;
   state.chatHistory=[];
+
+  // If deep dive was saved with the card, use it instantly — no API call needed
+  if(card.deepDive){
+    state.deepDive=card.deepDive;
+    renderDeepDive();
+    showScreen('deep');
+    return;
+  }
+
+  // Otherwise load from API
   showScreen('loading');
   startLoadingProgress(S2,`Charting your path to ${card.pathTitle}...`);
-
   const isLU=card.pathType==='LevelUp';
   const sys=`You are Pivit, a warm career advisor. Be specific and honest. No company or school names. No guaranteed outcomes.
 
@@ -987,9 +1000,8 @@ Respond ONLY with valid JSON, no markdown:
 ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
 Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
 
-  const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`;
   try{
-    const raw=await callClaude([{role:'user',content:msg}],sys);
+    const raw=await callClaude([{role:'user',content:`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`}],sys);
     state.deepDive=extractJSON(raw);
     finishLoadingProgress();
     setTimeout(()=>{renderDeepDive();showScreen('deep');},400);
@@ -1120,6 +1132,14 @@ fetch('/api/ping').catch(()=>{});
 loadProfile();
 updateRiskSlider(document.getElementById('risk'));
 renderSavedCards();
+
+// Set header height CSS variable for section jumper positioning
+function setHeaderHeight(){
+  const h=document.querySelector('.header');
+  if(h)document.documentElement.style.setProperty('--header-h', h.offsetHeight+'px');
+}
+setHeaderHeight();
+window.addEventListener('resize', setHeaderHeight);
 </script>
 </body>
 </html>
