@@ -41,8 +41,12 @@
   .main{max-width:800px;margin:0 auto;padding:48px 24px 80px;}
   .hero{text-align:center;margin-bottom:48px;animation:fadeUp 0.6s ease both;}
   .hero-eyebrow{display:inline-block;background:var(--terracotta-pale);color:var(--terracotta);font-size:0.78rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:6px 16px;border-radius:50px;margin-bottom:20px;}
-  .hero h1{font-family:'Lora',serif;font-size:clamp(2rem,5vw,3rem);font-weight:600;line-height:1.2;color:var(--charcoal);margin-bottom:16px;letter-spacing:-0.02em;}
-  .hero h1 em{color:var(--terracotta);font-style:italic;}
+  .hero h1{font-family:'Lora',serif;font-size:clamp(2rem,5vw,3rem);font-weight:600;line-height:1.25;color:var(--charcoal);margin-bottom:16px;letter-spacing:-0.02em;}
+  .hero h1 .h1-static{color:var(--charcoal);}
+  .hero h1 .h1-from{color:var(--terracotta);font-style:italic;opacity:0;animation:heroFrom 0.7s ease 0.3s both;}
+  .hero h1 .h1-to{color:var(--sage);font-style:italic;opacity:0;animation:heroTo 0.7s ease 0.8s both;}
+  @keyframes heroFrom{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes heroTo{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   .hero p{font-size:1.05rem;color:var(--warm-gray);max-width:500px;margin:0 auto;line-height:1.65;font-weight:300;}
   .privacy-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;font-size:0.78rem;color:var(--warm-gray);}
   .privacy-dot{width:6px;height:6px;background:var(--sage);border-radius:50%;display:inline-block;flex-shrink:0;}
@@ -206,6 +210,10 @@
   .chat-send{width:52px;height:52px;border-radius:50%;background:var(--terracotta);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0;}
   .chat-send:hover:not(:disabled){background:#B5633D;transform:scale(1.05);}
   .chat-send:disabled{opacity:0.5;cursor:not-allowed;}
+  .chat-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .chat-chip{padding:8px 14px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.8rem;color:var(--warm-gray);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;text-align:left;line-height:1.3;}
+  .chat-chip:hover{border-color:var(--terracotta);color:var(--terracotta);background:var(--terracotta-pale);}
+  .chat-chips.hidden{display:none;}
   .explore-other{text-align:center;padding:24px;border-top:1px solid var(--light-gray);margin-top:16px;}
 
   /* SECTION JUMPER */
@@ -246,6 +254,19 @@
   .bookmark-btn{position:absolute;top:16px;right:16px;background:var(--card-bg);border:1.5px solid var(--light-gray);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;transition:var(--transition);z-index:10;}
   .bookmark-btn:hover{border-color:var(--terracotta);background:var(--terracotta-pale);}
   .bookmark-btn.saved{background:var(--terracotta);border-color:var(--terracotta);color:white;}
+
+  /* TONE SELECTOR */
+  .tone-selector{display:flex;flex-direction:column;gap:12px;}
+  .tone-label{font-size:0.82rem;font-weight:600;color:var(--warm-gray);letter-spacing:0.04em;text-transform:uppercase;}
+  .tone-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .tone-option{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-sm);border:2px solid var(--light-gray);cursor:pointer;transition:var(--transition);background:var(--cream);}
+  .tone-option:hover{border-color:var(--terracotta-light);}
+  .tone-option.selected{border-color:var(--terracotta);background:var(--terracotta-pale);}
+  .tone-icon{font-size:1.4rem;flex-shrink:0;}
+  .tone-info{display:flex;flex-direction:column;gap:2px;}
+  .tone-info strong{font-size:0.88rem;color:var(--charcoal);}
+  .tone-info span{font-size:0.75rem;color:var(--warm-gray);}
+  @media(max-width:480px){.tone-options{grid-template-columns:1fr;}}
 
   .clear-data-link{color:var(--warm-gray);font-size:0.78rem;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif;transition:var(--transition);}
   .clear-data-link:hover{color:var(--terracotta);}
@@ -304,7 +325,7 @@
 
     <div class="hero">
       <div class="hero-eyebrow">AI-Powered Career Intelligence</div>
-      <h1>Your career — <em>from where you are to where you could be.</em></h1>
+      <h1><span class="h1-static">Your career —</span><br><span class="h1-from">from where you are</span> <span class="h1-to">to where you could be.</span></h1>
       <p>Pivit uses AI to build personalized career paths around your actual background — with real timelines, skill gaps, and AI resilience scores.</p>
     </div>
 
@@ -369,6 +390,29 @@
       <div class="save-toggle">
         <label class="toggle-switch"><input type="checkbox" id="saveProfile" onchange="handleSaveToggle(this)"><div class="slider-track"></div></label>
         <div class="save-toggle-text"><strong>Remember my profile</strong>Saved in your browser only — never on a server.</div>
+      </div>
+    </div>
+
+    <!-- TONE SELECTOR -->
+    <div class="card" style="animation-delay:0.25s;padding:24px 32px;">
+      <div class="tone-selector">
+        <div class="tone-label">How should Pivit talk to you?</div>
+        <div class="tone-options">
+          <div class="tone-option selected" id="tone-coach" onclick="selectTone('coach')">
+            <span class="tone-icon">🏋️</span>
+            <div class="tone-info">
+              <strong>Coach</strong>
+              <span>Give it to me straight</span>
+            </div>
+          </div>
+          <div class="tone-option" id="tone-cheer" onclick="selectTone('cheer')">
+            <span class="tone-icon">📣</span>
+            <div class="tone-info">
+              <strong>Cheerleader</strong>
+              <span>I need some encouragement</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -437,7 +481,10 @@
     </div>
 
     <div id="path-cards-container"></div>
-    <div class="text-center mt-24"><button class="btn btn-secondary" onclick="showScreen('form')">← Edit profile</button></div>
+    <div class="text-center mt-24" style="display:flex;flex-direction:column;gap:12px;align-items:center;">
+      <button class="btn btn-primary" style="max-width:320px;" onclick="explorMorePaths()" id="exploreMoreBtn">✨ Explore more paths →</button>
+      <button class="btn btn-secondary" onclick="showScreen('form')">← Edit profile</button>
+    </div>
     <div class="disclaimer-footer">⚠️ AI-generated for educational purposes only. Not a substitute for a qualified career counselor. Consult a real expert before making major career decisions.</div>
   </div>
 
@@ -472,6 +519,11 @@
     <div class="chat-section card" id="sec-chat">
       <div class="chat-title">Ask Pivit anything about this path</div>
       <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-chips" id="chatChips">
+        <button class="chat-chip" onclick="sendChip(this)">What if I can't go back to school?</button>
+        <button class="chat-chip" onclick="sendChip(this)">How do I explain this pivot in interviews?</button>
+        <button class="chat-chip" onclick="sendChip(this)">What salary could I realistically expect?</button>
+      </div>
       <div class="chat-input-row">
         <textarea class="chat-input" id="chatInput" placeholder="e.g. What if I don't want to go back to school?" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
         <button class="chat-send" onclick="sendChat()" id="chatSendBtn">
@@ -488,7 +540,7 @@
 
 <script>
 // ─── STATE ────────────────────────────────────────────────────────────────────
-const state={profile:{},paths:[],selectedPath:null,deepDive:null,chatHistory:[],theme:'light'};
+const state={profile:{},paths:[],selectedPath:null,deepDive:null,chatHistory:[],theme:'light',tone:'coach'};
 const selectedPills={goals:[],avoids:[]};
 
 // ─── THEME ────────────────────────────────────────────────────────────────────
@@ -501,6 +553,54 @@ function toggleTheme(){
 }
 
 // ─── TOOLTIPS ─────────────────────────────────────────────────────────────────
+// ─── TONE SELECTOR ────────────────────────────────────────────────────────────
+function selectTone(tone){
+  state.tone=tone;
+  document.getElementById('tone-coach').classList.toggle('selected',tone==='coach');
+  document.getElementById('tone-cheer').classList.toggle('selected',tone==='cheer');
+}
+function getToneInstruction(){
+  if(state.tone==='cheer')return"Be warm, encouraging, and motivational. Emphasize what's possible and frame challenges as opportunities. Lead with what they can achieve.";
+  return"Be direct, realistic, and specific. Don't sugarcoat difficulty. Give the unfiltered picture alongside actionable steps.";
+}
+
+// ─── EXPLORE MORE PATHS ───────────────────────────────────────────────────────
+async function explorMorePaths(){
+  const btn=document.getElementById('exploreMoreBtn');
+  if(btn){btn.disabled=true;btn.textContent='Finding new paths...';}
+  const seenTitles=state.paths.map(p=>p.pathTitle).join(', ');
+  const profileStr=`Age:${state.profile.age},Role:${state.profile.role},Industry:${state.profile.industry},Skills:${state.profile.skills},Wants more:${state.profile.goals.join(',')},Exp:${state.profile.experience||'?'},Edu:${state.profile.education||'?'},Timeline:${state.profile.timeline||'?'},Location:${state.profile.location||'?'},Wants less:${state.profile.avoids.join(',')||'?'},Risk:${state.profile.risk}/5,Context:${state.profile.context||'none'}`;
+  const toneInstr=getToneInstruction();
+  const avoidNote=`The user has already seen: ${seenTitles}. Generate genuinely different paths — different roles, industries, or directions not yet considered. Do not repeat any of the above.`;
+  showScreen('loading');
+  startLoadingProgress(S1,'Finding new possibilities...');
+  const sysA=`You are Pivit, a career advisor. ${toneInstr} No company or school names.\n\n${avoidNote}\n\nRespond ONLY valid JSON, no markdown:\n{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string"}]}\n\nGenerate exactly 2 paths: LevelUp then Adjacent.`;
+  const sysB=`You are Pivit, a career advisor. ${toneInstr} No company or school names.\n\n${avoidNote}\n\nRespond ONLY valid JSON, no markdown:\n{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string"}]}\n\nGenerate exactly 2 paths: Bold then Moonshot.`;
+  try{
+    const [rawA,rawB]=await Promise.all([
+      callClaude([{role:'user',content:profileStr}],sysA),
+      callClaude([{role:'user',content:profileStr}],sysB)
+    ]);
+    const pA=extractJSON(rawA),pB=extractJSON(rawB);
+    if(!pA.paths||!pB.paths)throw new Error('Missing paths');
+    state.paths=[...pA.paths,...pB.paths];
+    finishLoadingProgress();
+    setTimeout(()=>{renderPaths();showScreen('paths');if(btn){btn.disabled=false;btn.textContent='✨ Explore more paths →';}},400);
+  }catch(e){
+    finishLoadingProgress();showScreen('paths');
+    if(btn){btn.disabled=false;btn.textContent='✨ Explore more paths →';}
+    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+  }
+}
+
+// ─── CHAT CHIPS ───────────────────────────────────────────────────────────────
+function sendChip(el){
+  const chips=document.getElementById('chatChips');
+  if(chips)chips.classList.add('hidden');
+  document.getElementById('chatInput').value=el.textContent;
+  sendChat();
+}
+
 function toggleLegend(){
   const body=document.getElementById('legendBody');
   const arrow=document.getElementById('legendArrow');
@@ -664,15 +764,16 @@ async function generatePaths(){
   startLoadingProgress(S1,'Mapping your possibilities...');
 
   const profileStr=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
+  const toneInstr=getToneInstruction();
 
-  const sysA=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
+  const sysA=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
 {"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
 
 Generate exactly 2 paths: first LevelUp (grow/promote within current role — no job change), then Adjacent (low-friction pivot using existing skills). Be specific to their profile.`;
 
-  const sysB=`You are Pivit, a warm honest career advisor. Be specific and realistic. Never guarantee outcomes. No company or school names.
+  const sysB=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
 {"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
@@ -753,7 +854,7 @@ async function selectPath(idx){
   startLoadingProgress(S2,`Charting your path to ${state.selectedPath.pathTitle}...`);
 
   const isLU=state.selectedPath.pathType==='LevelUp';
-  const sys=`You are Pivit, a warm career advisor. Be specific and honest. No company or school names. No guaranteed outcomes.
+  const sys=`You are Pivit, a career advisor. ${getToneInstruction()} No company or school names. No guaranteed outcomes.
 
 Respond ONLY with valid JSON, no markdown:
 {"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
