@@ -561,8 +561,19 @@ function selectTone(tone){
   document.getElementById('tone-cheer').classList.toggle('selected',tone==='cheer');
 }
 function getToneInstruction(){
-  if(state.tone==='cheer')return"Be warm, motivational, and optimistic. Lead with what's possible and exciting about each path. Frame every challenge as something surmountable with the right effort. Use energizing language — the user needs encouragement and belief in themselves.";
-  return"Be direct and unfiltered. If a path is hard, say so plainly. Give realistic timelines without softening them. Name the real obstacles the user will face. The user wants truth over comfort — respect that by being honest even when it's uncomfortable.";
+  if(state.tone==='cheer')return`TONE: Cheerleader mode. Be energizing and possibility-focused throughout.
+- tagline: Lead with excitement about what they could become
+- eli5: Focus on the exciting destination, make it sound achievable
+- whyItFits: Lead with their strengths and transferable skills, frame gaps as "easy to close"
+- keySkillGaps: Keep this short — only the most critical gaps, frame them as growth opportunities
+- aiResilienceNote: Emphasize the human skills that AI can't replace in this role`;
+
+  return`TONE: Coach mode. Be direct, specific, and unvarnished.
+- tagline: State what this path actually requires, not just the upside
+- eli5: Be matter-of-fact about what the day-to-day really looks like
+- whyItFits: Acknowledge their strengths BUT name the real gaps they'll need to close — don't gloss over difficulty
+- keySkillGaps: Be thorough — list every meaningful gap, don't minimize them
+- aiResilienceNote: Be frank about which parts of this role AI will automate`;
 }
 
 // ─── EXPLORE MORE PATHS ───────────────────────────────────────────────────────
@@ -855,13 +866,15 @@ async function selectPath(idx){
   startLoadingProgress(S2,`Charting your path to ${state.selectedPath.pathTitle}...`);
 
   const isLU=state.selectedPath.pathType==='LevelUp';
+  const tone=state.tone;
   const sys=`You are Pivit, a career advisor. ${getToneInstruction()} No company or school names. No guaranteed outcomes.
 
 Respond ONLY with valid JSON, no markdown:
 {"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
 
 ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
-Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
+Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.
+${tone==='coach'?'risks: Be frank about real failure modes and what commonly goes wrong. dayInTheLife: Include the unglamorous parts of the role.':'risks: Acknowledge challenges but frame them as navigable. dayInTheLife: Paint an energizing picture of what success looks like.'}`;
 
   const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(state.selectedPath)}`;
 
