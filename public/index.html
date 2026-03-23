@@ -651,11 +651,12 @@ function checkShareParam(){
   if(data.type==='paths'&&data.paths){
     state.paths=data.paths;
     renderPaths();
-    showScreen('paths');
-    // Show shared banner, hide share button
+    // Force paths screen — must happen after any default form rendering
+    ['form','loading','paths','deep'].forEach(s=>
+      document.getElementById(`screen-${s}`).classList.toggle('hidden',s!=='paths')
+    );
     document.getElementById('sharedBanner').classList.remove('hidden');
     document.getElementById('sharePathsBtn').style.display='none';
-    // Update header
     const h=document.querySelector('#screen-paths .paths-header h2');
     if(h)h.textContent='Shared career possibilities';
     const p=document.querySelector('#screen-paths .paths-header p');
@@ -665,16 +666,19 @@ function checkShareParam(){
     state.deepDive=data.deepDive||null;
     if(data.deepDive){
       renderDeepDive();
-      showScreen('deep');
+      ['form','loading','paths','deep'].forEach(s=>
+        document.getElementById(`screen-${s}`).classList.toggle('hidden',s!=='deep')
+      );
     } else {
-      // No deep dive saved — show paths with this card highlighted
       state.paths=[data.path];
       renderPaths();
-      showScreen('paths');
+      ['form','loading','paths','deep'].forEach(s=>
+        document.getElementById(`screen-${s}`).classList.toggle('hidden',s!=='paths')
+      );
     }
     document.getElementById('sharedBanner').classList.remove('hidden');
   }
-  // Clean URL without reloading
+  // Clean URL
   window.history.replaceState({},'',window.location.pathname);
 }
 
@@ -1381,12 +1385,8 @@ function exportCopy(){const t=buildReport();if(!t){showToast('No report yet');re
 function exportEmail(){
   const t=buildReport();
   if(!t){showToast('No report yet');return;}
-  // mailto needs %0A for line breaks — encodeURIComponent encodes \n as %0A correctly
-  // but we also add extra blank lines between sections for readability in email clients
-  const formatted=t
-    .replace(/\n\n\n/g,'\n\n')   // normalize triple newlines
-    .replace(/═+/g,'───────────────────────────────')  // replace unicode that breaks some clients
-    .replace(/─+/g,'───────────────────────────────');
+  // Use \r\n for mailto — most email clients require carriage return + newline
+  const formatted=t.replace(/\n/g,'\r\n');
   const subject=encodeURIComponent('My Pivit Career Report — '+(state.selectedPath?.pathTitle||''));
   const body=encodeURIComponent(formatted);
   window.location.href=`mailto:?subject=${subject}&body=${body}`;
@@ -1433,8 +1433,8 @@ function setHeaderHeight(){
 setHeaderHeight();
 window.addEventListener('resize', setHeaderHeight);
 
-// Check for shared URL on load
-checkShareParam();
+// Check for shared URL on load — runs after all init to prevent form overriding it
+setTimeout(checkShareParam, 0);
 </script>
 </body>
 </html>
