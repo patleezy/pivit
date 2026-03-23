@@ -3,7 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pivit — Your Career Intelligence</title>
+<title>Pivit — AI-Powered Career Intelligence</title>
+<meta name="description" content="Pivit uses AI to build personalized career paths around your actual background — with real timelines, skill gaps, and AI resilience scores.">
+
+<!-- OG / Social -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pivit.space">
+<meta property="og:title" content="Pivit — AI-Powered Career Intelligence">
+<meta property="og:description" content="See where your career could actually go. Pivit maps personalized paths around your background — from promotion roadmap to full reinvention — with real timelines and skill gaps.">
+<meta property="og:image" content="https://pivit.space/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pivit — AI-Powered Career Intelligence">
+<meta name="twitter:description" content="See where your career could actually go. Personalized paths built around your actual background.">
+<meta name="twitter:image" content="https://pivit.space/og.png">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://pivit.space">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -269,6 +289,13 @@
   .tone-info span{font-size:0.75rem;color:var(--warm-gray);}
   @media(max-width:480px){.tone-options{grid-template-columns:1fr;}}
 
+  /* SHARE */
+  .share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:50px;border:1.5px solid var(--sage);background:var(--sage-pale);font-size:0.82rem;font-weight:600;color:var(--sage);cursor:pointer;transition:var(--transition);font-family:'DM Sans',sans-serif;}
+  .share-btn:hover{background:var(--sage);color:white;}
+  .shared-banner{background:var(--sage-pale);border:1px solid var(--sage-light);border-radius:var(--radius-sm);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;animation:fadeUp 0.4s ease both;}
+  .shared-banner-text{font-size:0.85rem;color:var(--charcoal);line-height:1.4;}
+  .shared-banner-text strong{display:block;margin-bottom:2px;}
+
   .clear-data-link{color:var(--warm-gray);font-size:0.78rem;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif;transition:var(--transition);}
   .clear-data-link:hover{color:var(--terracotta);}
   .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:var(--cream);padding:12px 24px;border-radius:50px;font-size:0.88rem;font-weight:500;z-index:1000;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;}
@@ -445,9 +472,21 @@
 
   <!-- PATHS -->
   <div id="screen-paths" class="hidden">
+    <!-- Shown when viewing someone else's shared results -->
+    <div class="shared-banner hidden" id="sharedBanner">
+      <div class="shared-banner-text">
+        <strong>👀 You're viewing someone's Pivit results</strong>
+        These career paths were generated for someone else's background.
+      </div>
+      <button class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem;width:auto;margin:0" onclick="showScreen('form')">Map my own paths →</button>
+    </div>
+
     <div class="paths-header">
       <h2>Your career possibilities</h2>
       <p>Four paths mapped for you — tap any to explore it in depth.</p>
+      <div style="margin-top:16px">
+        <button class="share-btn" onclick="shareResults()" id="sharePathsBtn">🔗 Share these results</button>
+      </div>
     </div>
 
     <!-- LEGEND -->
@@ -500,6 +539,7 @@
         <button class="export-btn" onclick="exportPDF()">📄 PDF</button>
         <button class="export-btn" onclick="exportEmail()">✉️ Email</button>
         <button class="export-btn" onclick="exportCopy()">📋 Copy</button>
+        <button class="export-btn" onclick="shareDeepDive()">🔗 Share</button>
       </div>
     </div>
 
@@ -554,6 +594,90 @@ function toggleTheme(){
 }
 
 // ─── TOOLTIPS ─────────────────────────────────────────────────────────────────
+// ─── SHARE URL ────────────────────────────────────────────────────────────────
+function encodeShareData(data){
+  try{ return btoa(unescape(encodeURIComponent(JSON.stringify(data)))); }
+  catch{ return null; }
+}
+function decodeShareData(str){
+  try{ return JSON.parse(decodeURIComponent(escape(atob(str)))); }
+  catch{ return null; }
+}
+
+function buildShareURL(data){
+  const encoded=encodeShareData(data);
+  if(!encoded)return null;
+  return `${window.location.origin}${window.location.pathname}?share=${encoded}`;
+}
+
+async function copyShareURL(url){
+  try{
+    if(navigator.share){
+      await navigator.share({title:'My Pivit Career Paths',text:'Check out the career paths Pivit mapped for me',url});
+    } else {
+      await navigator.clipboard.writeText(url);
+      showToast('🔗 Link copied — share it anywhere!');
+    }
+  }catch{
+    await navigator.clipboard.writeText(url);
+    showToast('🔗 Link copied — share it anywhere!');
+  }
+}
+
+function shareResults(){
+  if(!state.paths.length){showToast('No results to share yet');return;}
+  const data={type:'paths',paths:state.paths};
+  const url=buildShareURL(data);
+  if(!url){showToast('Could not generate share link');return;}
+  copyShareURL(url);
+}
+
+function shareDeepDive(){
+  if(!state.selectedPath){showToast('No path selected');return;}
+  const data={type:'deep',path:state.selectedPath,deepDive:state.deepDive};
+  const url=buildShareURL(data);
+  if(!url){showToast('Could not generate share link');return;}
+  copyShareURL(url);
+}
+
+function checkShareParam(){
+  const params=new URLSearchParams(window.location.search);
+  const shareStr=params.get('share');
+  if(!shareStr)return;
+
+  const data=decodeShareData(shareStr);
+  if(!data)return;
+
+  if(data.type==='paths'&&data.paths){
+    state.paths=data.paths;
+    renderPaths();
+    showScreen('paths');
+    // Show shared banner, hide share button
+    document.getElementById('sharedBanner').classList.remove('hidden');
+    document.getElementById('sharePathsBtn').style.display='none';
+    // Update header
+    const h=document.querySelector('#screen-paths .paths-header h2');
+    if(h)h.textContent='Shared career possibilities';
+    const p=document.querySelector('#screen-paths .paths-header p');
+    if(p)p.textContent='Someone shared their Pivit results with you. Tap any path to explore it.';
+  } else if(data.type==='deep'&&data.path){
+    state.selectedPath=data.path;
+    state.deepDive=data.deepDive||null;
+    if(data.deepDive){
+      renderDeepDive();
+      showScreen('deep');
+    } else {
+      // No deep dive saved — show paths with this card highlighted
+      state.paths=[data.path];
+      renderPaths();
+      showScreen('paths');
+    }
+    document.getElementById('sharedBanner').classList.remove('hidden');
+  }
+  // Clean URL without reloading
+  window.history.replaceState({},'',window.location.pathname);
+}
+
 // ─── TONE SELECTOR ────────────────────────────────────────────────────────────
 function selectTone(tone){
   state.tone=tone;
@@ -1308,6 +1432,9 @@ function setHeaderHeight(){
 }
 setHeaderHeight();
 window.addEventListener('resize', setHeaderHeight);
+
+// Check for shared URL on load
+checkShareParam();
 </script>
 </body>
 </html>
