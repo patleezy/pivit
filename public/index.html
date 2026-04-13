@@ -520,6 +520,10 @@
       </div>
     </div>
 
+    <div style="text-align:center;margin:0 0 16px">
+      <button class="btn btn-secondary" id="compareToggle" onclick="toggleCompare()" style="font-size:0.85rem;padding:8px 18px">&#x229E; Compare All</button>
+    </div>
+    <div id="compare-table" class="hidden"></div>
     <div id="path-cards-container"></div>
     <div class="text-center mt-24" style="display:flex;flex-direction:column;gap:12px;align-items:center;">
       <button class="btn btn-primary" style="max-width:320px;" onclick="explorMorePaths()" id="exploreMoreBtn">✨ Explore more paths →</button>
@@ -718,8 +722,8 @@ async function explorMorePaths(){
   const sysB=`You are Pivit, a career advisor. ${toneInstr} No company or school names.\n\n${avoidNote}\n\nRespond ONLY valid JSON, no markdown:\n{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string"}]}\n\nGenerate exactly 2 paths: Bold then Moonshot.`;
   try{
     const [rawA,rawB]=await Promise.all([
-      callClaude([{role:'user',content:profileStr}],sysA),
-      callClaude([{role:'user',content:profileStr}],sysB)
+      callClaudeWithRetry([{role:'user',content:profileStr}],sysA),
+      callClaudeWithRetry([{role:'user',content:profileStr}],sysB)
     ]);
     const pA=extractJSON(rawA),pB=extractJSON(rawB);
     if(!pA.paths||!pB.paths)throw new Error('Missing paths');
@@ -729,7 +733,7 @@ async function explorMorePaths(){
   }catch(e){
     finishLoadingProgress();showScreen('paths');
     if(btn){btn.disabled=false;btn.textContent='✨ Explore more paths →';}
-    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    showToast('Generation failed. Please try again.',explorMorePaths);
   }
 }
 
@@ -887,6 +891,22 @@ async function callClaude(messages,systemPrompt){
   if(!data.content)throw new Error('Empty response from API');
   return data.content;
 }
+async function callClaudeWithRetry(messages,systemPrompt){
+  const DELAYS=[2000,4000];
+  for(let attempt=0;attempt<=2;attempt++){
+    try{
+      return await callClaude(messages,systemPrompt);
+    }catch(e){
+      const retryable=/HTTP 5\d\d|Failed to fetch|NetworkError/i.test(e.message);
+      if(retryable&&attempt<2){
+        showToast(`Connection issue, retrying\u2026 (${attempt+1}/2)`);
+        await new Promise(r=>setTimeout(r,DELAYS[attempt]));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
 function extractJSON(raw){
   let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
   const s=c.indexOf('{'),e=c.lastIndexOf('}');
@@ -923,8 +943,8 @@ Generate exactly 2 paths: first Bold (meaningful career reinvention, requires ne
   try{
     // Fire both calls simultaneously
     const [rawA, rawB] = await Promise.all([
-      callClaude([{role:'user',content:profileStr}], sysA),
-      callClaude([{role:'user',content:profileStr}], sysB)
+      callClaudeWithRetry([{role:'user',content:profileStr}], sysA),
+      callClaudeWithRetry([{role:'user',content:profileStr}], sysB)
     ]);
 
     const parsedA=extractJSON(rawA);
@@ -939,7 +959,7 @@ Generate exactly 2 paths: first Bold (meaningful career reinvention, requires ne
     setTimeout(()=>{renderPaths();showScreen('paths');},400);
   }catch(e){
     finishLoadingProgress();showScreen('form');
-    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    showToast('Generation failed. Please try again.',generatePaths);
     console.error('Stage 1:',e);
   }
 }
@@ -947,6 +967,12 @@ Generate exactly 2 paths: first Bold (meaningful career reinvention, requires ne
 // ─── RENDER PATHS ─────────────────────────────────────────────────────────────
 function renderPaths(){
   const c=document.getElementById('path-cards-container');
+  // Reset compare toggle whenever paths re-render
+  const _ct=document.getElementById('compare-table');
+  const _cb=document.getElementById('compareToggle');
+  if(_ct){_ct.classList.add('hidden');_ct.innerHTML='';}
+  if(_cb)_cb.textContent='\u229E Compare All';
+  c.style.display='';
   const bmap={
     LevelUp:{cls:'badge-levelup',icon:'⬆'},
     Adjacent:{cls:'badge-adjacent',icon:'→'},
@@ -986,9 +1012,45 @@ function renderPaths(){
   }).join('');
 }
 
+// ─── PATH COMPARISON ──────────────────────────────────────────────────────────
+function toggleCompare(){
+  const tbl=document.getElementById('compare-table');
+  const btn=document.getElementById('compareToggle');
+  const cards=document.getElementById('path-cards-container');
+  const showing=!tbl.classList.contains('hidden');
+  if(showing){
+    tbl.classList.add('hidden');cards.style.display='';
+    btn.textContent='\u229E Compare All';
+  }else{
+    renderCompareTable();tbl.classList.remove('hidden');cards.style.display='none';
+    btn.textContent='\u229F Show Cards';
+  }
+}
+function renderCompareTable(){
+  const bmap={LevelUp:'\u2b06 Level Up',Adjacent:'\u2192 Adjacent',Bold:'\u2197 Bold',Moonshot:'\uD83D\uDE80 Moonshot'};
+  const resilience=sc=>sc>=4?'\uD83D\uDEE1 Resilient':sc>=3?'\u26A1 Moderate':'\u26A0\uFE0F High Risk';
+  const dots=n=>Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 2px;background:${i<n?'var(--terracotta)':'var(--cream-dark)'}"></span>`).join('');
+  const rows=state.paths.map((p,i)=>`
+    <tr onclick="selectPath(${i})" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background=''" style="cursor:pointer;border-bottom:1px solid var(--cream-dark)">
+      <td style="padding:12px"><strong>${bmap[p.pathType]||p.pathType}</strong><br><span style="font-size:0.82rem;color:var(--warm-gray)">${p.pathTitle}</span></td>
+      <td style="padding:12px">${dots(p.effortScore)}</td>
+      <td style="padding:12px;white-space:nowrap">\u23F1 ${p.timeline}</td>
+      <td style="padding:12px">${resilience(p.aiResilienceScore||3)}</td>
+    </tr>`).join('');
+  document.getElementById('compare-table').innerHTML=`
+    <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+      <thead><tr style="border-bottom:2px solid var(--cream-dark);text-align:left;font-size:0.78rem;color:var(--warm-gray)">
+        <th style="padding:8px 12px">Path</th><th style="padding:8px 12px">Effort</th><th style="padding:8px 12px">Timeline</th><th style="padding:8px 12px">AI Risk</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="text-align:center;font-size:0.8rem;color:var(--warm-gray)">Tap a row to deep dive \u2192</p>`;
+}
+
 // ─── STAGE 2 — deep dive ──────────────────────────────────────────────────────
 async function selectPath(idx){
   state.selectedPath=state.paths[idx];
+  state.selectedPathIdx=idx;
   state.chatHistory=[];
   showScreen('loading');
   startLoadingProgress(S2,`Charting your path to ${state.selectedPath.pathTitle}...`);
@@ -1007,13 +1069,13 @@ ${tone==='coach'?'risks: Be frank about real failure modes and what commonly goe
   const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(state.selectedPath)}`;
 
   try{
-    const raw=await callClaude([{role:'user',content:msg}],sys);
+    const raw=await callClaudeWithRetry([{role:'user',content:msg}],sys);
     state.deepDive=extractJSON(raw);
     finishLoadingProgress();
     setTimeout(()=>{renderDeepDive();showScreen('deep');},400);
   }catch(e){
     finishLoadingProgress();showScreen('paths');
-    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    showToast('Generation failed. Please try again.',()=>selectPath(state.selectedPathIdx));
     console.error('Stage 2:',e);
   }
 }
@@ -1244,13 +1306,13 @@ ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, vis
 Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
 
   try{
-    const raw=await callClaude([{role:'user',content:`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`}],sys);
+    const raw=await callClaudeWithRetry([{role:'user',content:`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`}],sys);
     state.deepDive=extractJSON(raw);
     finishLoadingProgress();
     setTimeout(()=>{renderDeepDive();showScreen('deep');},400);
   }catch(e){
     finishLoadingProgress();showScreen('form');
-    showToast(`Error: ${(e.message||'').slice(0,80)}`);
+    showToast('Generation failed. Please try again.',()=>viewSavedCard(card));
   }
 }
 
@@ -1326,7 +1388,7 @@ async function sendChat(){
   const sys=`You are Pivit, a warm honest career advisor in a follow-up chat. Be specific and concise (2-3 paragraphs). No company/school names. Profile:${JSON.stringify(state.profile)}. Path:${JSON.stringify(state.selectedPath)}.`;
   const msgs=[{role:'user',content:`Path context:${JSON.stringify(state.deepDive)}`},{role:'assistant',content:`Ready to help with ${state.selectedPath.pathTitle}.`},...state.chatHistory];
   try{
-    const reply=await callClaude(msgs,sys);
+    const reply=await callClaudeWithRetry(msgs,sys);
     td.querySelector('.message-bubble').innerHTML=reply.replace(/\n/g,'<br>');
     state.chatHistory.push({role:'assistant',content:reply});
   }catch(e){td.querySelector('.message-bubble').innerHTML='Something went wrong. Please try again.';}
@@ -1413,9 +1475,18 @@ function exportPDF(){
 }
 
 // ─── TOAST ────────────────────────────────────────────────────────────────────
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+function showToast(msg,onRetry){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  if(onRetry){
+    const btn=document.createElement('span');
+    btn.textContent=' Retry';
+    btn.style.cssText='text-decoration:underline;cursor:pointer;margin-left:6px';
+    btn.onclick=()=>{t.classList.remove('show');onRetry();};
+    t.appendChild(btn);
+  }
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),onRetry?6000:3000);
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────

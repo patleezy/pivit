@@ -1,5 +1,21 @@
 export const config = { maxDuration: 60 };
 
+const rateLimitMap = new Map();
+const RATE_LIMIT = 10;
+const WINDOW_MS = 60_000;
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.windowStart > WINDOW_MS) {
+    rateLimitMap.set(ip, { count: 1, windowStart: now });
+    return false;
+  }
+  if (entry.count >= RATE_LIMIT) return true;
+  entry.count++;
+  return false;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -13,6 +29,14 @@ export default async function handler(req, res) {
   const { messages, systemPrompt } = req.body;
   if (!messages || !systemPrompt) {
     return res.status(400).json({ error: 'Missing messages or systemPrompt' });
+  }
+
+  const ip =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    'unknown';
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: 'Rate limit exceeded. Please wait before trying again.' });
   }
 
   try {
