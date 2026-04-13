@@ -693,19 +693,21 @@ function selectTone(tone){
   document.getElementById('tone-cheer').classList.toggle('selected',tone==='cheer');
 }
 function getToneInstruction(){
-  if(state.tone==='cheer')return`TONE: Cheerleader mode. Be energizing and possibility-focused throughout.
+  if(state.tone==='cheer')return`TONE: Cheerleader. Your job is to energize and inspire. Write with warmth, genuine enthusiasm, and excitement about what's possible in EVERY field you generate. Use encouraging, possibility-forward language throughout. Lead with strengths. Frame every challenge as a manageable growth opportunity. Use phrases like "You already have...", "This is very achievable for someone with your background", "Your experience in X sets you up perfectly for...". Never dwell on negatives — reframe them as stepping stones.
+Per-field guidance:
 - tagline: Lead with excitement about what they could become
-- eli5: Focus on the exciting destination, make it sound achievable
-- whyItFits: Lead with their strengths and transferable skills, frame gaps as "easy to close"
-- keySkillGaps: Keep this short — only the most critical gaps, frame them as growth opportunities
-- aiResilienceNote: Emphasize the human skills that AI can't replace in this role`;
+- eli5: Make the destination sound exciting and within reach
+- whyItFits: Open with their strongest transferable skills; frame gaps as quick wins, not blockers
+- keySkillGaps: Limit to 2–3 items max; frame each as a short learning curve, never a deal-breaker
+- aiResilienceNote: Emphasize the uniquely human skills this role relies on that AI cannot replicate`;
 
-  return`TONE: Coach mode. Be direct, specific, and unvarnished.
-- tagline: State what this path actually requires, not just the upside
-- eli5: Be matter-of-fact about what the day-to-day really looks like
-- whyItFits: Acknowledge their strengths BUT name the real gaps they'll need to close — don't gloss over difficulty
-- keySkillGaps: Be thorough — list every meaningful gap, don't minimize them
-- aiResilienceNote: Be frank about which parts of this role AI will automate`;
+  return`TONE: Coach. Cut through the noise and give it straight. Be direct, specific, and honest — not harsh, but completely unvarnished. Name real obstacles clearly in EVERY field you generate. Don't soften gaps, hide difficulty, or pad with false reassurance. Respect the user enough to tell them the truth. Use concrete, action-oriented language. No fluff.
+Per-field guidance:
+- tagline: State what this path actually demands — not just the upside
+- eli5: Be matter-of-fact about the day-to-day reality, not the glamour
+- whyItFits: Name strengths clearly AND name every significant gap that must be closed — do not gloss over difficulty
+- keySkillGaps: Be thorough — list all meaningful gaps, don't minimize any of them
+- aiResilienceNote: Be frank about which specific tasks in this role AI will automate or significantly compress`;
 }
 
 // ─── EXPLORE MORE PATHS ───────────────────────────────────────────────────────
@@ -1056,7 +1058,6 @@ async function selectPath(idx){
   startLoadingProgress(S2,`Charting your path to ${state.selectedPath.pathTitle}...`);
 
   const isLU=state.selectedPath.pathType==='LevelUp';
-  const tone=state.tone;
   const sys=`You are Pivit, a career advisor. ${getToneInstruction()} No company or school names. No guaranteed outcomes.
 
 Respond ONLY with valid JSON, no markdown:
@@ -1064,7 +1065,7 @@ Respond ONLY with valid JSON, no markdown:
 
 ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
 Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.
-${tone==='coach'?'risks: Be frank about real failure modes and what commonly goes wrong. dayInTheLife: Include the unglamorous parts of the role.':'risks: Acknowledge challenges but frame them as navigable. dayInTheLife: Paint an energizing picture of what success looks like.'}`;
+Apply your tone to every field: expandedRoadmap steps, risks, dayInTheLife, aiProofingAdvice, and quickWins must all reflect the tone instruction above.`;
 
   const msg=`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(state.selectedPath)}`;
 
@@ -1297,13 +1298,14 @@ async function loadSavedCard(idx){
   showScreen('loading');
   startLoadingProgress(S2,`Charting your path to ${card.pathTitle}...`);
   const isLU=card.pathType==='LevelUp';
-  const sys=`You are Pivit, a warm career advisor. Be specific and honest. No company or school names. No guaranteed outcomes.
+  const sys=`You are Pivit, a career advisor. ${getToneInstruction()} No company or school names. No guaranteed outcomes.
 
 Respond ONLY with valid JSON, no markdown:
 {"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
 
 ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
-Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.`;
+Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.
+Apply your tone to every field: expandedRoadmap steps, risks, dayInTheLife, aiProofingAdvice, and quickWins must all reflect the tone instruction above.`;
 
   try{
     const raw=await callClaudeWithRetry([{role:'user',content:`Profile:${JSON.stringify(state.profile)}\nPath:${JSON.stringify(card)}`}],sys);
@@ -1385,7 +1387,7 @@ async function sendChat(){
   state.chatHistory.push({role:'user',content:msg});
   const btn=document.getElementById('chatSendBtn');btn.disabled=true;
   const td=addChatMessage('assistant','<em style="color:var(--warm-gray)">Pivit is thinking...</em>');
-  const sys=`You are Pivit, a warm honest career advisor in a follow-up chat. Be specific and concise (2-3 paragraphs). No company/school names. Profile:${JSON.stringify(state.profile)}. Path:${JSON.stringify(state.selectedPath)}.`;
+  const sys=`You are Pivit, a career advisor in a follow-up chat. ${getToneInstruction()} Be specific and concise (2-3 paragraphs). No company/school names. Profile:${JSON.stringify(state.profile)}. Path:${JSON.stringify(state.selectedPath)}.`;
   const msgs=[{role:'user',content:`Path context:${JSON.stringify(state.deepDive)}`},{role:'assistant',content:`Ready to help with ${state.selectedPath.pathTitle}.`},...state.chatHistory];
   try{
     const reply=await callClaudeWithRetry(msgs,sys);
