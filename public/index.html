@@ -110,7 +110,7 @@
   textarea{resize:vertical;min-height:80px;line-height:1.5;}
 
   .pill-group{display:flex;flex-wrap:wrap;gap:8px;}
-  .pill{padding:8px 16px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.85rem;color:var(--warm-gray);cursor:pointer;transition:var(--transition);user-select:none;font-family:'DM Sans',sans-serif;}
+  .pill{padding:8px 16px;border-radius:50px;border:1.5px solid var(--light-gray);background:var(--cream);font-size:0.85rem;font-weight:500;color:var(--warm-gray);cursor:pointer;transition:var(--transition);user-select:none;font-family:'DM Sans',sans-serif;}
   .pill:hover{border-color:var(--terracotta-light);color:var(--terracotta);}
   .pill.selected{background:var(--terracotta);border-color:var(--terracotta);color:white;font-weight:500;}
 
@@ -127,14 +127,14 @@
   .optional-fields{display:none;animation:fadeUp 0.3s ease;}
   .optional-fields.visible{display:block;}
 
-  .financial-arc{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--cream-dark,#f5f0ea);border-radius:8px;margin-top:12px;font-size:0.82rem;border:1px solid var(--light-gray);}
+  .financial-arc{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--terracotta-pale);border-radius:8px;margin-top:12px;font-size:0.82rem;border:1px solid var(--light-gray);}
   .arc-glyph{font-size:1.1rem;font-weight:700;flex-shrink:0;line-height:1.4;}
-  .arc-up{color:#2E7D32;}.arc-flat{color:var(--warm-gray);}.arc-down{color:#E65100;}
+  .arc-up{color:var(--sage);}.arc-flat{color:var(--warm-gray);}.arc-down{color:var(--terracotta);}
   .arc-details{display:flex;flex-direction:column;gap:3px;min-width:0;}
   .arc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:1px;}
   .arc-note{color:var(--charcoal);line-height:1.4;}
   .arc-range{color:var(--warm-gray);font-size:0.78rem;line-height:1.4;margin-top:2px;}
-  .arc-skeleton{display:inline-block;width:160px;height:11px;background:linear-gradient(90deg,var(--light-gray) 25%,#e8e0d8 50%,var(--light-gray) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;vertical-align:middle;}
+  .arc-skeleton{display:inline-block;width:160px;height:11px;background:linear-gradient(90deg,var(--light-gray) 25%,var(--card-bg) 50%,var(--light-gray) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;vertical-align:middle;}
   @keyframes arrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
   @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
@@ -569,6 +569,7 @@
         <button class="jump-pill" onclick="jumpTo('sec-day')" id="jp-day">Day in Life</button>
         <button class="jump-pill" onclick="jumpTo('sec-risks')" id="jp-risks">Risks</button>
         <button class="jump-pill" onclick="jumpTo('sec-ai')" id="jp-ai">AI-Proof</button>
+        <button class="jump-pill" onclick="jumpTo('sec-comp')" id="jp-comp">💰 Comp</button>
         <button class="jump-pill" onclick="jumpTo('sec-chat')" id="jp-chat">Q&amp;A</button>
       </div>
     </div>
@@ -577,11 +578,7 @@
     <div class="chat-section card" id="sec-chat">
       <div class="chat-title">Ask Pivit anything about this path</div>
       <div class="chat-messages" id="chatMessages"></div>
-      <div class="chat-chips" id="chatChips">
-        <button class="chat-chip" onclick="sendChip(this)">What if I can't go back to school?</button>
-        <button class="chat-chip" onclick="sendChip(this)">How do I explain this pivot in interviews?</button>
-        <button class="chat-chip" onclick="sendChip(this)">What salary could I realistically expect?</button>
-      </div>
+      <div class="chat-chips" id="chatChips"></div>
       <div class="chat-input-row">
         <textarea class="chat-input" id="chatInput" placeholder="e.g. What if I don't want to go back to school?" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
         <button class="chat-send" onclick="sendChat()" id="chatSendBtn">
@@ -945,15 +942,17 @@ async function generatePaths(){
   const sysA=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
-{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — web search to find salary range e.g. 'Senior Product Manager salary range United States 2024'"}}]}
+{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — US salary search ONLY, e.g. 'Senior Product Manager salary range United States 2024 USD'"}}]}
 
+Users are US-based. financialArc.searchQuery must target US salary data in USD.
 Generate exactly 2 paths: first LevelUp (grow/promote within current role — no job change), then Adjacent (low-friction pivot using existing skills). Be specific to their profile.`;
 
   const sysB=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
-{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — web search to find salary range e.g. 'Senior Product Manager salary range United States 2024'"}}]}
+{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — US salary search ONLY, e.g. 'Senior Product Manager salary range United States 2024 USD'"}}]}
 
+Users are US-based. financialArc.searchQuery must target US salary data in USD.
 Generate exactly 2 paths: first Bold (meaningful career reinvention, requires new skills but achievable), then Moonshot (high-ambition swing, transformational if they commit). Be specific to their profile.`;
 
   try{
@@ -1081,21 +1080,22 @@ function renderCompareTable(){
   const bmap={LevelUp:'\u2b06 Level Up',Adjacent:'\u2192 Adjacent',Bold:'\u2197 Bold',Moonshot:'\uD83D\uDE80 Moonshot'};
   const resilience=sc=>sc>=4?'\uD83D\uDEE1 Resilient':sc>=3?'\u26A1 Moderate':'\u26A0\uFE0F High Risk';
   const dots=n=>Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 2px;background:${i<n?'var(--terracotta)':'var(--cream-dark)'}"></span>`).join('');
-  const rows=state.paths.map((p,i)=>`
-    <tr onclick="selectPath(${i})" onmouseover="this.style.background='var(--cream-dark)'" onmouseout="this.style.background=''" style="cursor:pointer;border-bottom:1px solid var(--cream-dark)">
-      <td style="padding:12px"><strong>${bmap[p.pathType]||p.pathType}</strong><br><span style="font-size:0.82rem;color:var(--warm-gray)">${p.pathTitle}</span></td>
-      <td style="padding:12px">${dots(p.effortScore)}</td>
-      <td style="padding:12px;white-space:nowrap">\u23F1 ${p.timeline}</td>
-      <td style="padding:12px">${resilience(p.aiResilienceScore||3)}</td>
-    </tr>`).join('');
-  document.getElementById('compare-table').innerHTML=`
-    <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
-      <thead><tr style="border-bottom:2px solid var(--cream-dark);text-align:left;font-size:0.78rem;color:var(--warm-gray)">
-        <th style="padding:8px 12px">Path</th><th style="padding:8px 12px">Effort</th><th style="padding:8px 12px">Timeline</th><th style="padding:8px 12px">AI Risk</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p style="text-align:center;font-size:0.8rem;color:var(--warm-gray)">Tap a row to deep dive \u2192</p>`;
+  const cards=state.paths.map((p,i)=>{
+    const res=resilience(p.aiResilienceScore||3);
+    return`<div onclick="selectPath(${i})" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;border:1px solid var(--light-gray);background:var(--card-bg);cursor:pointer;transition:var(--transition);margin-bottom:10px;" onmouseover="this.style.borderColor='var(--terracotta-light)'" onmouseout="this.style.borderColor='var(--light-gray)'">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--warm-gray);margin-bottom:3px">${bmap[p.pathType]||p.pathType}</div>
+        <div style="font-weight:600;color:var(--charcoal);font-size:0.9rem;line-height:1.3;margin-bottom:6px">${p.pathTitle}</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.75rem;color:var(--warm-gray)">${dots(p.effortScore)}</span>
+          <span style="font-size:0.75rem;color:var(--warm-gray)">⏱ ${p.timeline}</span>
+        </div>
+        <div style="margin-top:5px;font-size:0.75rem;color:var(--warm-gray)">${res}</div>
+      </div>
+      <span style="color:var(--terracotta);font-size:1rem;flex-shrink:0">→</span>
+    </div>`;
+  }).join('');
+  document.getElementById('compare-table').innerHTML=cards+`<p style="text-align:center;font-size:0.8rem;color:var(--warm-gray);margin-top:4px">Tap a card to deep dive \u2192</p>`;
 }
 
 // ─── STAGE 2 — deep dive ──────────────────────────────────────────────────────
@@ -1111,8 +1111,9 @@ async function selectPath(idx){
   const sys=`You are Pivit, a career advisor. ${getToneInstruction()} No company or school names. No guaranteed outcomes.
 
 Respond ONLY with valid JSON, no markdown:
-{"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"]}
+{"expandedRoadmap":[{"title":"string","detail":"string","timeEstimate":"string"}],"resources":["string"],"risks":"string","dayInTheLife":"string","aiProofingAdvice":"string","quickWins":["string"],"compensation":{"starting":"string — e.g. $70K–$100K base","growth":"string — e.g. $120K–$160K total comp after 3–5 years","note":"string — 1–2 sentences on equity, bonus, upside, or anything else worth knowing"}}
 
+Users are US-based. All compensation figures must be in USD for the US market.
 ${isLU?'This is a Level Up path — focus on promotions, salary negotiation, visibility, and upskilling within their current role.':'Focus on the career transition.'}
 Keep it concise: roadmap max 5 steps, quickWins max 3 items, resources max 4 items. Detail per step: 1-2 sentences.
 ${tone==='coach'?'risks: Be frank about real failure modes and what commonly goes wrong. dayInTheLife: Include the unglamorous parts of the role.':'risks: Acknowledge challenges but frame them as navigable. dayInTheLife: Paint an energizing picture of what success looks like.'}`;
@@ -1220,10 +1221,39 @@ function renderDeepDive(){
         <div class="ai-proof-box"><p>${d.aiProofingAdvice}</p></div>
         <p style="margin-top:12px;font-size:0.82rem;color:var(--warm-gray);font-style:italic">AI Resilience: ${p.aiResilienceScore}/5 — ${p.aiResilienceNote}</p>
       </div>
-    </div>`;
+    </div>
+
+    ${d.compensation?`<div class="deep-section" id="sec-comp">
+      <div class="deep-section-header" onclick="toggleSection('sec-comp')">
+        <span class="deep-section-label">💰 Compensation (US)</span>
+        <span class="deep-section-chevron open" id="chev-sec-comp">▼</span>
+      </div>
+      <div class="deep-section-body" id="body-sec-comp">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;background:var(--terracotta-pale);border-radius:8px;">
+            <span style="font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gray)">Starting range</span>
+            <span style="font-weight:600;color:var(--charcoal)">${d.compensation.starting}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;background:var(--sage-pale);border-radius:8px;">
+            <span style="font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gray)">3–5 year range</span>
+            <span style="font-weight:600;color:var(--charcoal)">${d.compensation.growth}</span>
+          </div>
+          <p style="font-size:0.88rem;line-height:1.6;color:var(--charcoal)">${d.compensation.note}</p>
+          <p style="font-size:0.75rem;color:var(--warm-gray);font-style:italic">Estimates based on US market data. Actual compensation varies by location, company size, and experience.</p>
+        </div>
+      </div>
+    </div>`:''}` ;
 
   document.getElementById('chatMessages').innerHTML='';
   state.chatHistory=[];
+  const chipSets={
+    LevelUp:["How do I negotiate my next promotion?","What metrics will make me stand out?","What salary bump is realistic at this level?"],
+    Adjacent:["How transferable are my current skills?","What will my first 90 days look like?","What salary could I realistically expect?"],
+    Bold:["How do I manage financial risk during the transition?","How do I explain this change in interviews?","What salary could I realistically expect?"],
+    Moonshot:["How do I evaluate whether the equity is worth it?","How do I break in without direct experience?","What salary could I realistically expect?"]
+  };
+  const chips=chipSets[p.pathType]||chipSets.Bold;
+  document.getElementById('chatChips').innerHTML=chips.map(c=>`<button class="chat-chip" onclick="sendChip(this)">${c}</button>`).join('');
   addChatMessage('assistant',`I've mapped out the path to ${p.pathTitle} for you. What questions do you have?`);
   // Update bookmark button state if this path is saved — now update with deep dive data
   const saved=getSavedCards();
