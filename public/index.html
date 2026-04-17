@@ -119,12 +119,24 @@
   input[type="range"]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:linear-gradient(to right,var(--terracotta) 0%,var(--terracotta) 50%,var(--light-gray) 50%,var(--light-gray) 100%);outline:none;padding:0;border:none;box-shadow:none;}
   input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--terracotta);cursor:pointer;box-shadow:0 2px 8px rgba(196,113,74,0.3);}
 
-  .optional-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:16px 0;border-top:1px solid var(--light-gray);margin-top:8px;color:var(--warm-gray);font-size:0.9rem;font-weight:500;transition:var(--transition);user-select:none;}
+  .optional-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:16px 0;border-top:1px solid var(--light-gray);margin-top:8px;color:var(--warm-gray);font-size:0.9rem;font-weight:500;transition:var(--transition);user-select:none;}
   .optional-toggle:hover{color:var(--terracotta);}
-  .toggle-arrow{width:20px;height:20px;border-radius:50%;background:var(--terracotta-pale);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--terracotta);transition:transform 0.3s ease;}
-  .toggle-arrow.open{transform:rotate(180deg);}
+  .toggle-arrow{width:20px;height:20px;border-radius:50%;background:var(--terracotta-pale);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--terracotta);transition:transform 0.3s ease;flex-shrink:0;}
+  .toggle-arrow:not(.open):not(.was-toggled){animation:arrowBounce 1s ease-in-out 1s 3;}
+  .toggle-arrow.open{transform:rotate(180deg);animation:none;}
   .optional-fields{display:none;animation:fadeUp 0.3s ease;}
   .optional-fields.visible{display:block;}
+
+  .financial-arc{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--cream-dark,#f5f0ea);border-radius:8px;margin-top:12px;font-size:0.82rem;border:1px solid var(--light-gray);}
+  .arc-glyph{font-size:1.1rem;font-weight:700;flex-shrink:0;line-height:1.4;}
+  .arc-up{color:#2E7D32;}.arc-flat{color:var(--warm-gray);}.arc-down{color:#E65100;}
+  .arc-details{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .arc-label{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:1px;}
+  .arc-note{color:var(--charcoal);line-height:1.4;}
+  .arc-range{color:var(--warm-gray);font-size:0.78rem;line-height:1.4;margin-top:2px;}
+  .arc-skeleton{display:inline-block;width:160px;height:11px;background:linear-gradient(90deg,var(--light-gray) 25%,#e8e0d8 50%,var(--light-gray) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;vertical-align:middle;}
+  @keyframes arrowBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
   .save-toggle{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--sage-pale);border-radius:var(--radius-sm);margin-top:8px;}
   .toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
@@ -378,13 +390,14 @@
         </div>
       </div>
       <div class="optional-toggle" onclick="toggleOptional()">
-        <div class="toggle-arrow" id="optionalArrow">▼</div>
         Help Pivit understand you better (optional but worth it)
+        <div class="toggle-arrow" id="optionalArrow">▼</div>
       </div>
       <div class="optional-fields" id="optionalFields">
         <div class="form-grid mt-16">
           <div class="field"><label>Years of Experience</label><input type="number" id="experience" placeholder="e.g. 8" min="0" max="50"></div>
           <div class="field"><label>Education</label><input type="text" id="education" placeholder="e.g. BS Computer Science, MBA"></div>
+          <div class="field"><label>Current Compensation</label><input type="text" id="currentSalary" placeholder="e.g. $120,000"></div>
           <div class="field"><label>Target Timeline</label>
             <select id="timeline"><option value="">— Select —</option><option value="1 year">Within 1 year</option><option value="2-3 years">2–3 years</option><option value="5+ years">5+ years</option><option value="no rush">No rush, just exploring</option></select>
           </div>
@@ -771,7 +784,9 @@ function togglePill(el,group){
 }
 function toggleOptional(){
   document.getElementById('optionalFields').classList.toggle('visible');
-  document.getElementById('optionalArrow').classList.toggle('open');
+  const arrow=document.getElementById('optionalArrow');
+  arrow.classList.toggle('open');
+  arrow.classList.add('was-toggled');
 }
 function updateRiskSlider(el){
   const pct=((el.value-el.min)/(el.max-el.min))*100;
@@ -793,7 +808,7 @@ function loadProfile(){
   const data=JSON.parse(saved);
   document.getElementById('saveProfile').checked=true;
   document.getElementById('clearBtn').style.display='inline';
-  ['age','role','industry','skills','experience','education','timeline','location','context'].forEach(f=>{
+  ['age','role','industry','skills','experience','education','currentSalary','timeline','location','context'].forEach(f=>{
     if(data[f]&&document.getElementById(f))document.getElementById(f).value=data[f];
   });
   if(data.risk){document.getElementById('risk').value=data.risk;updateRiskSlider(document.getElementById('risk'));}
@@ -825,7 +840,8 @@ function collectProfile(){
     age:document.getElementById('age').value,role:document.getElementById('role').value,
     industry:document.getElementById('industry').value,skills:document.getElementById('skills').value,
     goals:selectedPills.goals,experience:document.getElementById('experience').value,
-    education:document.getElementById('education').value,timeline:document.getElementById('timeline').value,
+    education:document.getElementById('education').value,currentSalary:document.getElementById('currentSalary').value,
+    timeline:document.getElementById('timeline').value,
     location:document.getElementById('location').value,avoids:selectedPills.avoids,
     risk:document.getElementById('risk').value,context:document.getElementById('context').value
   };
@@ -923,20 +939,20 @@ async function generatePaths(){
   showScreen('loading');
   startLoadingProgress(S1,'Mapping your possibilities...');
 
-  const profileStr=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
+  const profileStr=`Age:${profile.age},Role:${profile.role},Industry:${profile.industry},Skills:${profile.skills},Wants more:${profile.goals.join(',')},Exp:${profile.experience||'?'},Edu:${profile.education||'?'},CurrentComp:${profile.currentSalary||'?'},Timeline:${profile.timeline||'?'},Location:${profile.location||'?'},Wants less:${profile.avoids.join(',')||'?'},Risk:${profile.risk}/5,Context:${profile.context||'none'}`;
   const toneInstr=getToneInstruction();
 
   const sysA=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
-{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
+{"paths":[{"pathTitle":"string","pathType":"LevelUp"|"Adjacent","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — web search to find salary range e.g. 'Senior Product Manager salary range United States 2024'"}}]}
 
 Generate exactly 2 paths: first LevelUp (grow/promote within current role — no job change), then Adjacent (low-friction pivot using existing skills). Be specific to their profile.`;
 
   const sysB=`You are Pivit, a career advisor. ${toneInstr} Never guarantee outcomes. No company or school names.
 
 Respond with ONLY valid JSON, no markdown:
-{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence"}]}
+{"paths":[{"pathTitle":"string","pathType":"Bold"|"Moonshot","tagline":"string","effortScore":1-5,"timeline":"string","eli5":"string — 2 sentences zero jargon","whyItFits":"string","keySkillGaps":["string"],"aiResilienceScore":1-5,"aiResilienceNote":"string — one sentence","financialArc":{"direction":"up"|"flat"|"down","note":"string — one sentence on comp trajectory vs current","searchQuery":"string — web search to find salary range e.g. 'Senior Product Manager salary range United States 2024'"}}]}
 
 Generate exactly 2 paths: first Bold (meaningful career reinvention, requires new skills but achievable), then Moonshot (high-ambition swing, transformational if they commit). Be specific to their profile.`;
 
@@ -956,7 +972,7 @@ Generate exactly 2 paths: first Bold (meaningful career reinvention, requires ne
     state.paths=[...parsedA.paths,...parsedB.paths];
 
     finishLoadingProgress();
-    setTimeout(()=>{renderPaths();showScreen('paths');},400);
+    setTimeout(()=>{renderPaths();showScreen('paths');loadFinancialArcs(state.paths);},400);
   }catch(e){
     finishLoadingProgress();showScreen('form');
     showToast('Generation failed. Please try again.',generatePaths);
@@ -988,6 +1004,17 @@ function renderPaths(){
     const al=sc>=4?'🛡 AI-resilient':sc>=3?'⚡ Moderate AI risk':'⚠️ High AI risk';
     const label=p.pathType==='LevelUp'?'Level Up':p.pathType;
     const isSaved=isCardSaved(i);
+    const fa=p.financialArc;
+    const arcGlyph=fa?.direction==='up'?'↑':fa?.direction==='down'?'↓':'~';
+    const arcCls=fa?.direction==='up'?'arc-up':fa?.direction==='down'?'arc-down':'arc-flat';
+    const arcRow=fa?`<div class="financial-arc" onclick="event.stopPropagation()">
+      <span class="arc-glyph ${arcCls}">${arcGlyph}</span>
+      <div class="arc-details">
+        <span class="arc-label">💰 Financial Arc</span>
+        <span class="arc-note">${fa.note}</span>
+        <span class="arc-range" id="arc-range-${i}"><span class="arc-skeleton"></span></span>
+      </div>
+    </div>`:'';
     return`<div class="path-card" onclick="selectPath(${i})" style="animation-delay:${i*0.1}s">
       <button class="bookmark-btn${isSaved?' saved':''}" onclick="event.stopPropagation();toggleBookmark(${i})" id="bookmark-${i}" title="${isSaved?'Remove from saved':'Save this path'}">${isSaved?'🔖':'🔖'}</button>
       <div class="path-badge ${b.cls}" style="margin-bottom:14px">${b.icon} ${label}</div>
@@ -1004,12 +1031,36 @@ function renderPaths(){
         <div class="meta-item">⏱ ${p.timeline}</div>
         <div class="ai-resilience" style="color:${ac};background:${ac}18">${al}</div>
       </div>
+      ${arcRow}
       <div class="path-cta">
         <span style="font-size:0.82rem;color:var(--warm-gray)">Tap to explore this path in depth</span>
         <span style="color:var(--terracotta);font-size:1.1rem">→</span>
       </div>
     </div>`;
   }).join('');
+}
+
+// ─── FINANCIAL ARC (TAVILY) ───────────────────────────────────────────────────
+async function loadFinancialArcs(paths){
+  const searches=paths.map((p,i)=>{
+    const q=p.financialArc?.searchQuery;
+    if(!q)return Promise.resolve({i,answer:null});
+    return fetch('/api/tavily',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})})
+      .then(r=>r.ok?r.json():{answer:null})
+      .then(data=>({i,answer:data.answer||null}))
+      .catch(()=>({i,answer:null}));
+  });
+  const results=await Promise.all(searches);
+  results.forEach(({i,answer})=>{
+    const el=document.getElementById(`arc-range-${i}`);
+    if(!el)return;
+    if(answer){
+      const short=answer.length>110?answer.slice(0,107)+'\u2026':answer;
+      el.innerHTML=`<span style="color:var(--warm-gray)">${short}</span>`;
+    }else{
+      el.style.display='none';
+    }
+  });
 }
 
 // ─── PATH COMPARISON ──────────────────────────────────────────────────────────
